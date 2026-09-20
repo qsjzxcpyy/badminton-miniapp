@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.db
+.venv/
+node_modules/
+dist/
+unpackage/
+.idea/
+.DS_Store
