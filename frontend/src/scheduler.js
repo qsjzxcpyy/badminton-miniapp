@@ -1,4 +1,4 @@
-const LEVEL_WEIGHT = { H: 3, M: 2, X: 1.5, L: 1 }
+﻿const LEVEL_WEIGHT = { H: 3, M: 2, X: 1.5, L: 1 }
 
 function combinations(items, size) {
   const output = []
@@ -70,6 +70,72 @@ export function isLegalGroup(ids, players) {
   return !(high === 1 && middle === 3)
 }
 
+function isNinePlayerQualityGroup(ids, players) {
+  const levelCounts = players.reduce((counts, player) => {
+    counts[player.level] = (counts[player.level] || 0) + 1
+    return counts
+  }, {})
+  const isTargetShape = players.length === 9
+    && levelCounts.H === 2
+    && levelCounts.M === 3
+    && levelCounts.X === 1
+    && levelCounts.L === 3
+  if (!isTargetShape) return true
+
+  const levels = ids.map(id => players.find(player => player.id === id)?.level)
+  if (levels.includes('H')) return true
+  const middleCount = levels.filter(level => level === 'M').length
+  const nextMiddleCount = levels.filter(level => level === 'X').length
+  const lowCount = levels.filter(level => level === 'L').length
+  return !(middleCount === 1 && nextMiddleCount === 0 && lowCount === 3)
+}
+
+function isNinePlayerRotationShape(players) {
+  const levelCounts = players.reduce((counts, player) => {
+    counts[player.level] = (counts[player.level] || 0) + 1
+    return counts
+  }, {})
+  return players.length === 9
+    && levelCounts.H === 2
+    && levelCounts.M === 3
+    && levelCounts.X === 1
+    && levelCounts.L === 3
+}
+
+function previewRotationMetrics(state, candidate, playerIds) {
+  const rests = { ...state.restLengths }
+  const streaks = { ...state.playStreaks }
+  let currentMaxRest = 0
+  let currentMaxStreak = 0
+  let maxRest = state.maxRestLength || 0
+  let maxStreak = state.maxPlayStreak || 0
+  let restPressure = 0
+  playerIds.forEach(id => {
+    if (candidate.includes(id)) {
+      rests[id] = 0
+      streaks[id] += 1
+    } else {
+      rests[id] += 1
+      streaks[id] = 0
+    }
+    currentMaxRest = Math.max(currentMaxRest, rests[id])
+    currentMaxStreak = Math.max(currentMaxStreak, streaks[id])
+    maxRest = Math.max(maxRest, rests[id])
+    maxStreak = Math.max(maxStreak, streaks[id])
+    restPressure += rests[id] ** 2
+  })
+  return { rests, streaks, maxRest, maxStreak, currentMaxRest, currentMaxStreak, restPressure }
+}
+
+function applyRotationMetrics(state, candidate, playerIds) {
+  const metrics = previewRotationMetrics(state, candidate, playerIds)
+  state.restLengths = metrics.rests
+  state.playStreaks = metrics.streaks
+  state.maxRestLength = metrics.maxRest
+  state.maxPlayStreak = metrics.maxStreak
+  state.restPressure = metrics.restPressure
+}
+
 function isHighLowFallback(ids, players) {
   const levels = ids.map(id => players.find(player => player.id === id)?.level)
   return levels.filter(level => level === 'H').length === 1
@@ -120,8 +186,12 @@ function stateCost(state, playerIds, levelFor) {
     : []
   const minimumHighPartnerCoverage = highPartnerCoverage.length ? Math.min(...highPartnerCoverage.map(partners => partners.length)) : 0
   const totalHighPartnerCoverage = highPartnerCoverage.reduce((sum, partners) => sum + partners.length, 0)
+  const rotationCost = state.rotationMode
+    ? [state.maxRestLength || 0, state.maxPlayStreak || 0, state.restPressure || 0]
+    : []
   return [
     Math.max(...values) - Math.min(...values),
+    ...rotationCost,
     state.maxConsecutive,
     state.consecutive,
     variance,
@@ -153,7 +223,9 @@ function cloneState(state) {
     teamPairs: { ...state.teamPairs },
     opponentPairs: { ...state.opponentPairs },
     quartets: { ...state.quartets },
-    rounds: [...state.rounds]
+    rounds: [...state.rounds],
+    restLengths: { ...state.restLengths },
+    playStreaks: { ...state.playStreaks }
   }
 }
 
@@ -230,6 +302,12 @@ function buildStructuredHighRotation(players, roundCount, random) {
     lowMiddleRepeatScore: 0,
     teamRepeatScore: 0,
     opponentRepeatScore: 0,
+    rotationMode: false,
+    restLengths: Object.fromEntries(playerIds.map(id => [id, 0])),
+    playStreaks: Object.fromEntries(playerIds.map(id => [id, 0])),
+    maxRestLength: 0,
+    maxPlayStreak: 0,
+    restPressure: 0,
     tieBreaker: random()
   }
   const pattern = rolePattern(roundCount, random)
@@ -240,7 +318,11 @@ function buildStructuredHighRotation(players, roundCount, random) {
     const expanded = []
     const candidates = shuffle(pattern[step] === 'high' ? highCandidates : mixedCandidates, random)
     beam.forEach(state => {
-      candidates.forEach(candidate => {
+      const nonOverlapping = state.previous
+        ? candidates.filter(candidate => candidate.every(id => !state.previous.includes(id)))
+        : candidates
+      const candidatePool = nonOverlapping.length ? nonOverlapping : candidates
+      candidatePool.forEach(candidate => {
         const next = cloneState(state)
         const overlap = next.previous ? candidate.filter(id => next.previous.includes(id)).length : 0
         const arranged = arrangeTeams(candidate, levelFor, next, random)
@@ -348,11 +430,12 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
   const levelFor = id => players.find(player => player.id === id)?.level
   const totalHigh = players.filter(player => player.level === 'H').length
   const allGroups = combinations(playerIds, 4)
-  const legalCandidates = allGroups.filter(ids => isLegalGroup(ids, players))
+  const legalCandidates = allGroups.filter(ids => isLegalGroup(ids, players) && isNinePlayerQualityGroup(ids, players))
   const hasNormalHighCandidate = legalCandidates.some(ids => ids.some(id => levelFor(id) === 'H'))
   const fallbackCandidates = allGroups.filter(ids => isHighLowFallback(ids, players))
   const candidates = shuffle(hasNormalHighCandidate ? legalCandidates : legalCandidates.concat(fallbackCandidates), random)
   if (!candidates.length) return []
+  const rotationMode = isNinePlayerRotationShape(players)
 
   const initial = {
     counts: Object.fromEntries(playerIds.map(id => [id, 0])),
@@ -370,6 +453,12 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
     highMiddleRepeatScore: 0,
     teamRepeatScore: 0,
     opponentRepeatScore: 0,
+    rotationMode,
+    restLengths: Object.fromEntries(playerIds.map(id => [id, 0])),
+    playStreaks: Object.fromEntries(playerIds.map(id => [id, 0])),
+    maxRestLength: 0,
+    maxPlayStreak: 0,
+    restPressure: 0,
     tieBreaker: random()
   }
 
@@ -383,6 +472,7 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
     const arranged = [round.p1, round.p2, round.p3, round.p4]
     recordRoundHistory(initial, ids, arranged)
     initial.previous = ids
+    if (rotationMode) applyRotationMetrics(initial, ids, playerIds)
   })
 
   let beam = [initial]
@@ -396,8 +486,39 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
       const minimumOverlap = state.previous
         ? Math.min(...pool.map(candidate => candidate.filter(id => state.previous.includes(id)).length))
         : 0
-      const rotationPool = pool.filter(candidate => !state.previous || candidate.filter(id => state.previous.includes(id)).length === minimumOverlap)
-      const candidatePool = rotationPool
+      const rotationPool = state.rotationMode
+        ? pool
+        : pool.filter(candidate => !state.previous || candidate.filter(id => state.previous.includes(id)).length === minimumOverlap)
+      const candidatePool = state.rotationMode
+        ? (() => {
+          const scored = rotationPool.map(candidate => {
+            const projectedCounts = playerIds.map(id => state.counts[id] + (candidate.includes(id) ? 1 : 0))
+            return {
+              candidate,
+              metrics: previewRotationMetrics(state, candidate, playerIds),
+              projectedSpread: Math.max(...projectedCounts) - Math.min(...projectedCounts),
+              overlap: state.previous ? candidate.filter(id => state.previous.includes(id)).length : 0,
+              random: random()
+            }
+          })
+          const fair = scored.filter(item => item.metrics.currentMaxRest <= 2 && item.metrics.currentMaxStreak <= 2)
+          const source = fair.length ? fair : scored
+          source.sort((left, right) => compareNumbers([
+            left.projectedSpread,
+            left.metrics.currentMaxStreak,
+            left.metrics.restPressure,
+            left.overlap,
+            left.random
+          ], [
+            right.projectedSpread,
+            right.metrics.currentMaxStreak,
+            right.metrics.restPressure,
+            right.overlap,
+            right.random
+          ]))
+          return source.slice(0, 48).map(item => item.candidate)
+        })()
+        : rotationPool
       candidatePool.forEach(candidate => {
         const next = cloneState(state)
         const overlap = next.previous ? candidate.filter(id => next.previous.includes(id)).length : 0
@@ -413,6 +534,7 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
           next.counts[id] += 1
           next.lastPlayed[id] = roundIndex
         })
+        if (next.rotationMode) applyRotationMetrics(next, candidate, playerIds)
         next.consecutive += overlap
         next.maxConsecutive = Math.max(next.maxConsecutive, overlap)
         next.groupRepeatScore += groupRepeat
@@ -431,7 +553,83 @@ function buildScheduleAttempt({ players, roundCount, random = Math.random, previ
   }
 
   beam.sort((left, right) => compareNumbers(stateCost(left, playerIds, levelFor), stateCost(right, playerIds, levelFor)))
-  return repairHighPartnerFreshness(beam[0]?.rounds || [], players, previousRounds, random)
+  const generatedRounds = repairHighPartnerFreshness(beam[0]?.rounds || [], players, previousRounds, random)
+  return repairNinePlayerBalance(generatedRounds, players, previousRounds)
+}
+
+function roundPlayerIds(round) {
+  return [round.p1, round.p2, round.p3, round.p4]
+}
+
+function hasNinePlayerLongRest(rounds, playerIds) {
+  return playerIds.some(playerId => {
+    const played = rounds.map(round => roundPlayerIds(round).includes(playerId))
+    for (let index = 0; index < played.length;) {
+      if (!played[index]) {
+        index += 1
+        continue
+      }
+      const runStart = index
+      while (index < played.length && played[index]) index += 1
+      const runLength = index - runStart
+      const restStart = index
+      while (index < played.length && !played[index]) index += 1
+      const restLength = index - restStart
+      if (index < played.length && runLength >= 2 && restLength >= 3) return true
+    }
+    return false
+  })
+}
+
+function replaceRoundPlayer(rounds, roundIndex, fromId, toId, players) {
+  const nextRounds = rounds.map(round => ({ ...round }))
+  const round = nextRounds[roundIndex]
+  const ids = roundPlayerIds(round)
+  if (!ids.includes(fromId) || ids.includes(toId)) return null
+  const slot = ['p1', 'p2', 'p3', 'p4'].find(key => round[key] === fromId)
+  round[slot] = toId
+  const activePlayers = players.filter(player => player.status !== 'withdrawn')
+  if (!isLegalGroup(roundPlayerIds(round), activePlayers) || !isNinePlayerQualityGroup(roundPlayerIds(round), activePlayers)) return null
+  return nextRounds
+}
+
+function repairNinePlayerBalance(rounds, players, previousRounds) {
+  if (!isNinePlayerRotationShape(players) || !rounds.length) return rounds
+  const allRounds = [...previousRounds, ...rounds]
+  const playerIds = players.map(player => player.id)
+  const levelFor = id => players.find(player => player.id === id)?.level
+  for (let attempt = 0; attempt < rounds.length * players.length; attempt += 1) {
+    const counts = Object.fromEntries(playerIds.map(id => [id, 0]))
+    allRounds.forEach(round => roundPlayerIds(round).forEach(id => { if (counts[id] !== undefined) counts[id] += 1 }))
+    const values = Object.values(counts)
+    if (Math.max(...values) - Math.min(...values) <= 1) return rounds
+    const over = playerIds.filter(id => counts[id] === Math.max(...values) && levelFor(id) !== 'H')
+    const under = playerIds.filter(id => counts[id] === Math.min(...values))
+    let repaired = false
+    for (const roundIndex of rounds.keys()) {
+      const combinedIndex = previousRounds.length + roundIndex
+      for (const fromId of over) {
+        for (const toId of under) {
+          const candidateRounds = replaceRoundPlayer(rounds, roundIndex, fromId, toId, players)
+          if (!candidateRounds) continue
+          const candidateAllRounds = [...previousRounds, ...candidateRounds]
+          const totalHigh = players.filter(player => player.level === 'H').length
+          const transitionsValid = candidateAllRounds.every((round, index) => index === 0 || isHighPairTransition(roundPlayerIds(round), roundPlayerIds(candidateAllRounds[index - 1]), levelFor, totalHigh))
+          if (!transitionsValid || hasNinePlayerLongRest(candidateAllRounds, playerIds)) continue
+          const nextCounts = { ...counts, [fromId]: counts[fromId] - 1, [toId]: counts[toId] + 1 }
+          if (Math.max(...Object.values(nextCounts)) > Math.max(...values)) continue
+          rounds.splice(0, rounds.length, ...candidateRounds)
+          allRounds.splice(0, allRounds.length, ...candidateAllRounds)
+          repaired = true
+          break
+        }
+        if (repaired) break
+      }
+      if (repaired) break
+    }
+    if (!repaired) return rounds
+  }
+  return rounds
 }
 
 function scheduleSpread(rounds, previousRounds, playerIds) {
@@ -457,7 +655,7 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
   }
   let best = []
   let bestSpread = Infinity
-  const attempts = previousRounds.length ? 1 : 4
+  const attempts = previousRounds.length ? 1 : (isNinePlayerRotationShape(players) ? 1 : 4)
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     const rounds = buildScheduleAttempt({ players, roundCount, random, previousRounds })
     const spread = scheduleSpread(rounds, previousRounds, eligibleIds)
@@ -469,3 +667,4 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
   }
   return best
 }
+

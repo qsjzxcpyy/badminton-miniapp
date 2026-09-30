@@ -1,0 +1,11 @@
+﻿{
+  "pages": ["pages/index/index"],
+  "window": {
+    "navigationBarTitleText": "羽毛球友谊赛",
+    "navigationBarBackgroundColor": "#071b2e",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#071b2e"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

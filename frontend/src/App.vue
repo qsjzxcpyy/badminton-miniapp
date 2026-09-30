@@ -21,7 +21,7 @@
       <template v-else>
         <form class="entry-form create-match-form" @submit.prevent="createMatch">
           <label for="create-match-name">比赛名称</label>
-          <input id="create-match-name" v-model="createDraft.name" placeholder="例如：周六夜场" maxlength="24" />
+          <input id="create-match-name" v-model="createDraft.name" placeholder="例如：羽毛球 · 友谊赛" maxlength="24" />
           <label for="create-invite-code">设置邀请码</label>
           <input id="create-invite-code" v-model="createDraft.inviteCode" inputmode="numeric" maxlength="6" placeholder="输入 6 位数字" />
           <p class="entry-helper">创建后你将自动拥有管理权限，不需要额外密码。</p>
@@ -34,7 +34,7 @@
     <template v-else>
       <header class="topbar">
         <div>
-          <p class="eyebrow">SATURDAY NIGHT · COURT 01</p>
+          <p class="eyebrow">BADMINTON · COURT 01</p>
           <h2>{{ match.name }}</h2>
         </div>
         <button v-if="isCreator" class="icon-button" aria-label="打开管理" title="管理" @click="openAdmin">
@@ -81,7 +81,7 @@
 
         <div v-if="nextRound" class="next-card">
           <div class="next-title"><span>下一局</span><span class="rest-label">轮流上场中</span></div>
-          <div class="next-players"><span>{{ teamNames(nextRound, 1) }}</span><b>VS</b><span>{{ teamNames(nextRound, 2) }}</span></div>
+          <div class="next-players"><span class="next-team next-team-a">{{ teamNames(nextRound, 1) }}</span><b>VS</b><span class="next-team next-team-b">{{ teamNames(nextRound, 2) }}</span></div>
           <div class="rest-strip"><span class="rest-dot"></span>其余球员休息，下一局继续轮换</div>
         </div>
 
@@ -149,8 +149,8 @@
           <div class="admin-summary"><div><strong>{{ playerCount }}</strong><span>球员</span></div><div><strong>{{ rounds.length }}</strong><span>赛程局数</span></div><div><strong>{{ scheduleLocked ? '已锁定' : '未生成' }}</strong><span>等级状态</span></div></div>
           <div class="admin-panel">
             <div class="panel-heading"><h4>参赛名单</h4><span>水平仅管理员可见</span></div>
-            <div v-for="player in players" :key="player.id" class="player-row"><div class="avatar small" :style="{ background: avatarColor(player.id) }">{{ player.name.slice(0, 1) }}</div><strong>{{ player.name }}</strong><span class="level-badge" :class="'level-' + player.level">{{ levelName(player.level) }}</span><select class="player-status-select" :value="player.status || 'active'" @change="setPlayerStatus(player.id, $event.target.value)" aria-label="Player status"><option value="active">正常</option><option value="paused">暂停</option><option value="withdrawn">退出</option></select><button class="remove-button" @click="removePlayer(player.id)" aria-label="删除球员">×</button></div>
-            <div class="add-player"><input v-model="newPlayerName" placeholder="添加球员姓名" @keyup.enter="addPlayer" /><select v-model="newPlayerLevel"><option value="H">高</option><option value="M">中</option><option value="X">次中</option><option value="L">低</option></select><button class="small-button" @click="addPlayer">添加</button></div>
+            <div v-for="player in visibleAdminPlayers" :key="player.id" class="player-row"><div class="avatar small" :style="{ background: avatarColor(player.id) }">{{ player.name.slice(0, 1) }}</div><strong>{{ player.name }}</strong><span class="level-badge" :class="'level-' + player.level">{{ levelName(player.level) }}</span><select class="player-status-select" :value="player.status || 'active'" @change="setPlayerStatus(player.id, $event.target.value)" aria-label="Player status"><option value="active">正常</option><option value="paused">暂停</option><option value="withdrawn">退出</option></select><button class="remove-button" @click="removePlayer(player.id)" aria-label="删除球员">×</button></div>
+            <div class="add-player"><input v-model="newPlayerName" placeholder="添加球员姓名" @keyup.enter="addPlayer" /><select v-model="newPlayerLevel"><option value="H">高</option><option value="M">中</option><option value="X">次中</option><option value="L">低</option></select><button class="small-button" @click="addPlayer">添加</button></div><div class="roster-tools"><span>可保存为下次创建比赛的默认名单</span><button id="save-default-roster" class="roster-save-button" @click="saveDefaultRoster">保存为默认名单</button></div>
           </div>
           <div class="admin-panel">
             <div class="panel-heading"><h4>赛程控制</h4><span>默认 180 分钟</span></div>
@@ -193,7 +193,7 @@ const seedRounds = pairs.map((p, i) => ({ id: i + 1, seq: i + 1, p1: p[0], p2: p
 export default {
   data() {
     return {
-      entered: false, inviteCode: '', entryError: '', entryMode: 'join', currentUserId: '', createDraft: { name: '', inviteCode: '' }, screen: 'match', match: { id: 'demo-match', name: '周六夜场 · 友谊赛', inviteCode: '260920', creatorId: 'wx-demo-creator' },
+      entered: false, inviteCode: '', entryError: '', entryMode: 'join', currentUserId: '', createDraft: { name: '羽毛球 · 友谊赛', inviteCode: '' }, screen: 'match', match: { id: 'demo-match', name: '羽毛球 · 友谊赛', inviteCode: '260920', creatorId: 'wx-demo-creator' },
       players: [], rounds: [], scoreDraft: { score1: 0, score2: 0 }, toast: '', toastType: 'success',
       scheduleFilter: 'all', editingRound: null, editDraft: { score1: 0, score2: 0 },
       adminUnlocked: false, adminPassword: '', adminError: '', newPlayerName: '', newPlayerLevel: 'M', scheduleLocked: true,
@@ -203,6 +203,7 @@ export default {
   },
   computed: {
     playerCount() { return this.players.length },
+    visibleAdminPlayers() { return this.players.filter(player => (player.status || 'active') !== 'withdrawn') },
     isCreator() { return Boolean(this.currentUserId && this.match.creatorId && this.currentUserId === this.match.creatorId) },
     activePlayerCount() { return this.players.filter(p => (p.status || 'active') === 'active').length },
     completedCount() { return this.rounds.filter(r => r.status === 'completed').length },
@@ -243,6 +244,7 @@ export default {
       try {
         const data = JSON.parse(saved)
         this.match = { ...this.match, ...(data.match || {}) }
+        if (this.match.name === '周六夜场 · 友谊赛') this.match.name = '羽毛球 · 友谊赛'
         this.players = (data.players || []).map(player => ({ status: 'active', ...player }))
         this.rounds = data.rounds || []
       } catch {
@@ -252,8 +254,20 @@ export default {
       this.resetDemo()
     }
   },  methods: {
-    resetDemo() { this.match = { id: 'demo-match', name: '周六夜场 · 友谊赛', inviteCode: '260920', creatorId: 'wx-demo-creator' }; this.players = structuredClone(seedPlayers); this.rounds = structuredClone(seedRounds) },
+    resetDemo() { this.match = { id: 'demo-match', name: '羽毛球 · 友谊赛', inviteCode: '260920', creatorId: 'wx-demo-creator' }; this.players = structuredClone(seedPlayers); this.rounds = structuredClone(seedRounds) },
     persist() { localStorage.setItem('badminton-demo', JSON.stringify({ match: this.match, players: this.players, rounds: this.rounds })) },
+    loadDefaultRoster() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('badminton-default-roster') || '[]')
+        if (Array.isArray(saved) && saved.length) return saved.map(player => ({ ...player, status: 'active' }))
+      } catch {}
+      return structuredClone(seedPlayers)
+    },
+    saveDefaultRoster() {
+      const roster = this.players.filter(player => (player.status || 'active') !== 'withdrawn').map(({ id, name, level }) => ({ id, name, level, status: 'active' }))
+      localStorage.setItem('badminton-default-roster', JSON.stringify(roster))
+      this.showToast('默认名单已保存，下次创建比赛会自动加载')
+    },
     enterMatch() {
       if (this.inviteCode !== this.match.inviteCode) { this.entryError = '邀请码不正确，请重新输入'; return }
       this.entered = true
@@ -265,8 +279,8 @@ export default {
       const inviteCode = this.createDraft.inviteCode.trim()
       if (!name) { this.entryError = '请先填写比赛名称'; return }
       if (!/^\d{6}$/.test(inviteCode)) { this.entryError = '邀请码必须是 6 位数字'; return }
-      this.match = { id: 'match-' + Date.now(), name, inviteCode, creatorId: this.currentUserId }
-      this.players = []
+      this.match = { id: 'match-' + Date.now(), name: name || '羽毛球 · 友谊赛', inviteCode, creatorId: this.currentUserId }
+      this.players = this.loadDefaultRoster()
       this.rounds = []
       this.entered = true
       this.entryError = ''
@@ -290,7 +304,13 @@ export default {
     addPlayer() {
       const name = this.newPlayerName.trim()
       if (!name) return
-      this.players.push({ id: Math.max(...this.players.map(p => p.id), 0) + 1, name, level: this.newPlayerLevel, status: 'active' })
+      const withdrawn = this.players.find(player => player.name === name && player.status === 'withdrawn')
+      if (withdrawn) {
+        withdrawn.status = 'active'
+        withdrawn.level = this.newPlayerLevel
+      } else {
+        this.players.push({ id: Math.max(...this.players.map(p => p.id), 0) + 1, name, level: this.newPlayerLevel, status: 'active' })
+      }
       this.newPlayerName = ''
       this.showToast('球员已添加，请重新生成未开始赛程')
     },
