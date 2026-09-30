@@ -59,7 +59,7 @@ function recordRoundHistory(state, ids, arranged) {
   state.maxQuartetCount = Math.max(state.maxQuartetCount, state.quartets[key])
 }
 
-export function isLegalGroup(ids, players) {
+function isLegalGroup(ids, players) {
   if (ids.length !== 4 || new Set(ids).size !== 4) return false
   const levelFor = id => players.find(player => player.id === id)?.level
   const levels = ids.map(levelFor)
@@ -643,7 +643,7 @@ function scheduleSpread(rounds, previousRounds, playerIds) {
   return values.length ? Math.max(...values) - Math.min(...values) : Infinity
 }
 
-export function buildSchedule({ players, roundCount, random = Math.random, previousRounds = [] }) {
+function buildSchedule({ players, roundCount, random = Math.random, previousRounds = [] }) {
   if (!previousRounds.length) {
     const structured = buildStructuredHighRotation(players, roundCount, random)
     if (structured?.length === roundCount) return structured
@@ -667,4 +667,7 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
   }
   return best
 }
+
+module.exports = { buildSchedule, isLegalGroup };
+
 
