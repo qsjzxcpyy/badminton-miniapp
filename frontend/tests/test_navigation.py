@@ -1,4 +1,4 @@
-﻿from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright
 
 BASE_URL = "http://127.0.0.1:5174"
 
@@ -24,8 +24,7 @@ def test_admin_exit_returns_to_player_match():
         page = browser.new_page(viewport={"width": 390, "height": 844})
         open_match(page)
         page.locator(".icon-button").click()
-        page.locator('input[placeholder="输入管理员密码"]').fill("8888")
-        page.locator(".admin-lock .primary-button").click()
+        assert page.locator(".admin-panel").first.is_visible()
         page.locator(".text-button").click()
         assert page.locator(".court-card").is_visible()
         browser.close()

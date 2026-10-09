@@ -1,31 +1,90 @@
-﻿<view class="container">
-  <block wx:if="{{screen === 'entry'}}">
-    <view class="brand"><text class="eyebrow">ONE COURT · MANY RALLIES</text><h1>羽毛球<br/>友谊赛</h1><text class="muted">把每一分、每一场和每一次轮换都记录下来。</text></view>
-    <view class="segment"><button class="{{entryMode === 'join' ? 'selected' : ''}}" data-mode="join" bindtap="chooseEntry">加入比赛</button><button class="{{entryMode === 'create' ? 'selected' : ''}}" data-mode="create" bindtap="chooseEntry">创建比赛</button></view>
-    <view class="card" wx:if="{{entryMode === 'join'}}"><text class="muted">比赛邀请码</text><input data-field="inviteCode" value="{{inviteCode}}" maxlength="6" type="number" placeholder="输入 6 位数字" bindinput="onInput"/><button class="primary" bindtap="enterMatch">进入比赛</button></view>
-    <view class="card" wx:else><text class="muted">比赛名称</text><input data-field="createName" value="{{createName}}" maxlength="24" bindinput="onInput"/><text class="muted">设置邀请码</text><input data-field="createInvite" value="{{createInvite}}" maxlength="6" type="number" placeholder="输入 6 位数字" bindinput="onInput"/><button class="primary" bindtap="createMatch">创建并进入管理</button></view>
-    <text class="error" wx:if="{{error}}">{{error}}</text><text class="success" wx:if="{{notice}}">{{notice}}</text>
-  </block>
-  <block wx:else>
-    <view class="topline"><view><text class="eyebrow">BADMINTON · COURT 01</text><h2>{{match.name}}</h2></view><text class="pill">{{isCreator ? '创建者' : '参赛者'}}</text></view>
-    <text class="error" wx:if="{{error}}">{{error}}</text><text class="success" wx:if="{{notice}}">{{notice}}</text>
-    <block wx:if="{{screen === 'match'}}">
-      <view class="card score-card" wx:if="{{currentRound}}"><view class="topline"><text class="eyebrow">第 {{currentRound.seq}} 局 · 正在进行</text><text class="muted">净胜分实时更新</text></view><view class="score-grid"><view class="team"><text class="team-name">{{currentRound.team1}}</text><input class="score-input" data-field="score1" value="{{score1}}" type="number" min="0" bindinput="onInput"/></view><text class="vs">VS</text><view class="team"><text class="team-name">{{currentRound.team2}}</text><input class="score-input orange" data-field="score2" value="{{score2}}" type="number" min="0" bindinput="onInput"/></view></view><text class="hint">比分只需填写非负整数，没有上限</text><button class="primary" bindtap="submitScore">提交本局比分</button></view>
-      <view class="card" wx:else><h3>今天的球局打完了</h3><text class="muted">去赛程查看全部对局，去排名查看净胜分。</text></view>
-      <view class="card" wx:if="{{nextRound}}"><text class="eyebrow">下一局</text><view class="team-name">{{nextRound.team1}} <text class="vs"> VS </text> {{nextRound.team2}}</view><text class="hint">其余球员休息，继续轮换</text></view>
-      <view class="card"><view class="topline"><text>参赛球员</text><text class="pill">{{players.length}} 人</text></view><text class="muted">比分和排名保存在云端，所有参与者看到同一份数据。</text></view>
-    </block>
-    <block wx:elif="{{screen === 'schedule'}}"><view class="topline"><view><text class="eyebrow">COURT ROTATION</text><h3>完整赛程</h3></view><text class="pill">{{rounds.length}} 局</text></view><view class="card"><block wx:for="{{rounds}}" wx:key="id"><view class="row" data-id="{{item.id}}" bindtap="openEdit"><text class="index">{{item.seq}}</text><view class="row-main"><text class="row-name">{{item.team1}}</text><text class="row-name">{{item.team2}}</text><text class="row-sub">{{item.status === 'active' ? '进行中' : item.status === 'completed' ? '已完成 · 点击修改比分' : '待开始'}}</text></view><text class="round-score">{{item.score1 === null ? '—' : item.score1}} : {{item.score2 === null ? '—' : item.score2}}</text></view></block></view></block>
-    <block wx:elif="{{screen === 'ranking'}}"><view class="topline"><view><text class="eyebrow">NET SCOREBOARD</text><h3>实时排名</h3></view><text class="pill">按净胜分</text></view><view class="card"><block wx:for="{{ranking}}" wx:key="id"><view class="row"><text class="index">{{index + 1}}</text><view class="row-main"><text class="row-name">{{item.name}}</text><text class="row-sub">{{item.wins}} 胜 · {{item.games}} 局</text></view><text class="net {{item.net < 0 ? 'negative' : ''}}">{{item.net > 0 ? '+' : ''}}{{item.net}}</text></view></block></view><text class="muted">净胜分 = 所在一方得分 − 对方得分；修改历史比分后会自动重算。</text></block>
-    <block wx:elif="{{screen === 'admin'}}"><view class="topline"><view><text class="eyebrow">CONTROL ROOM</text><h3>比赛管理</h3></view><text class="pill">仅创建者</text></view><view class="card"><text class="muted">参赛名单和等级仅创建者可见，普通球员不会看到等级。</text><block wx:for="{{adminPlayers}}" wx:key="id"><view class="row admin-player"><input value="{{item.name}}" data-id="{{item.id}}" data-field="name" bindinput="changePlayer" bindblur="savePlayerEdits"/><picker range="{{levels}}" value="{{item.levelIndex}}" data-id="{{item.id}}" data-field="level" bindchange="changePlayer"><view class="level">{{levelName(item.level)}} ▾</view></picker><button class="remove" data-id="{{item.id}}" bindtap="removePlayer">{{item.status === 'withdrawn' ? '恢复' : '退出'}}</button></view></block><view class="row admin-player"><input data-field="newPlayerName" value="{{newPlayerName}}" placeholder="添加球员姓名" bindinput="onInput"/><picker range="{{levels}}" value="1" data-field="newPlayerLevel" bindchange="changeNewLevel"><view class="level">添加等级 ▾</view></picker></view><button class="secondary" bindtap="addPlayer">添加球员</button><button class="secondary" bindtap="saveDefaultRoster">保存为下次默认名单</button></view><view class="card"><view class="topline"><text>赛程控制</text><text class="muted">默认 15 局</text></view><text class="muted">算法会优先安排最长时间未上场的人，并控制局数差、连打和搭档新鲜度。</text><button class="primary" bindtap="generateSchedule">生成 / 重排待开始赛程</button><button class="secondary" bindtap="extendSchedule">追加 5 局</button></view><text class="muted">当前 {{players.length}} 人 · 已生成 {{rounds.length}} 局</text></block>
-    <view class="nav"><button class="nav-item {{screen === 'match' ? 'active' : ''}}" data-screen="match" bindtap="switchScreen"><text class="nav-icon">●</text>比赛</button><button class="nav-item {{screen === 'schedule' ? 'active' : ''}}" data-screen="schedule" bindtap="switchScreen"><text class="nav-icon">▤</text>赛程</button><button class="nav-item {{screen === 'ranking' ? 'active' : ''}}" data-screen="ranking" bindtap="switchScreen"><text class="nav-icon">↗</text>排名</button><button wx:if="{{isCreator}}" class="nav-item {{screen === 'admin' ? 'active' : ''}}" data-screen="admin" bindtap="switchScreen"><text class="nav-icon">⚙</text>管理</button></view>
-  </block>
-  <view class="modal" wx:if="{{editingRound}}" catchtap="closeEdit"><view class="modal-card" catchtap="noop"><view class="topline"><view><text class="eyebrow">EDIT SCORE</text><h3>修改第 {{editingRound.seq}} 局</h3></view><button class="secondary" bindtap="closeEdit">关闭</button></view><text class="row-name">{{editingRound.team1}} VS {{editingRound.team2}}</text><view class="modal-score"><input data-field="editScore1" value="{{editScore1}}" type="number" bindinput="onInput"/><text>:</text><input data-field="editScore2" value="{{editScore2}}" type="number" bindinput="onInput"/></view><button class="primary" bindtap="saveEdit">保存新比分</button></view></view>
+<view class="app-shell">
+  <view wx:if="{{screen === 'entry'}}" class="entry-page">
+    <view class="entry-glow"></view>
+    <view class="brand-mark"><view class="feather"></view></view>
+    <view class="entry-hero">
+      <text class="eyebrow">ONE COURT · MANY RALLIES</text>
+      <view class="entry-title">羽球开场</view>
+      <text class="entry-copy">输入比赛邀请码，和球友一起把每一分记下来。</text>
+    </view>
+    <view class="entry-mode-switch">
+      <button class="entry-mode-button {{entryMode === 'join' ? 'active' : ''}}" data-mode="join" bindtap="chooseEntry">加入比赛</button>
+      <button class="entry-mode-button {{entryMode === 'create' ? 'active' : ''}}" data-mode="create" bindtap="chooseEntry">创建比赛</button>
+    </view>
+    <view class="entry-form-card" wx:if="{{entryMode === 'join'}}">
+      <text class="form-label">比赛邀请码</text>
+      <input class="form-input invite-input" data-field="inviteCode" value="{{inviteCode}}" maxlength="6" type="number" placeholder="输入 6 位数字" bindinput="onInput" />
+      <text wx:if="{{error}}" class="form-error">{{error}}</text>
+      <button class="primary-button full-button" bindtap="enterMatch">进入比赛 <text class="button-arrow">→</text></button>
+    </view>
+    <view class="entry-form-card" wx:else>
+      <text class="form-label">比赛名称</text>
+      <input class="form-input" data-field="createName" value="{{createName}}" maxlength="24" bindinput="onInput" />
+      <text class="form-label">设置邀请码</text>
+      <input class="form-input invite-input" data-field="createInvite" value="{{createInvite}}" maxlength="6" type="number" placeholder="输入 6 位数字" bindinput="onInput" />
+      <text class="form-helper">创建者自动拥有管理权限，不需要管理员密码。</text>
+      <text wx:if="{{error}}" class="form-error">{{error}}</text>
+      <button class="primary-button full-button" bindtap="createMatch">创建比赛并进入管理 <text class="button-arrow">→</text></button>
+    </view>
+    <text wx:if="{{notice}}" class="entry-notice">{{notice}}</text>
+  </view>
+
+  <view wx:else class="main-page">
+    <view class="topbar">
+      <view class="topbar-copy"><text class="eyebrow">BADMINTON · COURT 01</text><view class="topbar-title">{{match.name}}</view></view>
+      <button wx:if="{{isCreator}}" class="icon-button" data-screen="admin" bindtap="switchScreen" aria-label="打开管理">⚙</button>
+    </view>
+    <view wx:if="{{error}}" class="message error-message">{{error}}</view>
+    <view wx:if="{{notice}}" class="message notice-message">{{notice}}</view>
+
+    <view wx:if="{{screen === 'match'}}" class="content">
+      <view class="status-line"><text class="live-pill"><text class="live-dot"></text>{{currentRound ? '正在进行' : '等待开场'}}</text><text class="muted">{{completedCount}} / {{roundCount}} 局完成</text></view>
+      <view wx:if="{{currentRound}}" class="court-card">
+        <view class="court-lines"><view class="court-line-left"></view><view class="court-line-right"></view></view>
+        <view class="round-heading"><text>第 {{currentRound.seq}} 局</text><text class="round-time">约 12 分钟</text></view>
+        <view class="scoreboard">
+          <view class="team"><text class="team-label"><text class="team-dot"></text>A 队</text><text class="team-names">{{currentRound.team1}}</text><input class="score-input" data-field="score1" value="{{score1}}" type="number" placeholder="0" bindinput="onInput" /></view>
+          <text class="versus">VS</text>
+          <view class="team"><text class="team-label"><text class="team-dot orange-dot"></text>B 队</text><text class="team-names">{{currentRound.team2}}</text><input class="score-input orange-score" data-field="score2" value="{{score2}}" type="number" placeholder="0" bindinput="onInput" /></view>
+        </view>
+        <text class="score-hint">比分没有上限，结束时提交即可</text>
+        <button class="primary-button full-button" bindtap="submitScore">提交本局比分 <text class="button-arrow">→</text></button>
+      </view>
+      <view wx:else class="empty-card"><text class="empty-icon">✓</text><view class="empty-title">今天的球局打完了</view><text class="muted">所有小局都已记录，去排名看看结果吧。</text></view>
+      <view wx:if="{{nextRound}}" class="next-card"><view class="next-title"><text>下一局</text><text class="rest-label">轮流上场中</text></view><view class="next-players"><text class="next-team">{{nextRound.team1}}</text><text class="vs-chip">VS</text><text class="next-team">{{nextRound.team2}}</text></view><text class="rest-strip"><text class="rest-dot"></text>其余球员休息，下一局继续轮换</text></view>
+      <view class="quick-stats"><view class="stat"><text class="stat-value">{{playerCount}}</text><text class="stat-caption">参赛球员</text></view><view class="stat"><text class="stat-value">{{roundCount}}</text><text class="stat-caption">计划小局</text></view><view class="stat"><text class="stat-value">3h+</text><text class="stat-caption">预计时长</text></view></view>
+    </view>
+
+    <view wx:elif="{{screen === 'schedule'}}" class="content">
+      <view class="page-heading"><view><text class="eyebrow">COURT ROTATION</text><view class="page-title">完整赛程</view></view><text class="count-chip">{{roundCount}} 局</text></view>
+      <view class="filter-tabs"><button class="filter-tab {{scheduleFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="chooseFilter">全部</button><button class="filter-tab {{scheduleFilter === 'active' ? 'active' : ''}}" data-filter="active" bindtap="chooseFilter">进行中</button><button class="filter-tab {{scheduleFilter === 'pending' ? 'active' : ''}}" data-filter="pending" bindtap="chooseFilter">待开始</button><button class="filter-tab {{scheduleFilter === 'completed' ? 'active' : ''}}" data-filter="completed" bindtap="chooseFilter">已完成</button></view>
+      <view wx:if="{{!filteredRoundCount}}" class="empty-card"><view class="empty-title">这里还没有对局</view><text class="muted">切换筛选项，或请创建者生成赛程。</text></view>
+      <view wx:for="{{filteredRounds}}" wx:key="id" class="schedule-row {{item.status}}" data-id="{{item.id}}" bindtap="openEdit"><text class="round-index">{{item.seqLabel}}</text><view class="matchup"><view class="matchup-line"><text class="matchup-name">{{item.team1}}</text><text class="matchup-score">{{item.score1Label}}</text></view><view class="matchup-line"><text class="matchup-name">{{item.team2}}</text><text class="matchup-score">{{item.score2Label}}</text></view></view><text class="row-status">{{item.statusText}}</text></view>
+      <text class="section-note">点击已完成的小局，可以修改任意非负比分。</text>
+    </view>
+
+    <view wx:elif="{{screen === 'ranking'}}" class="content">
+      <view class="page-heading"><view><text class="eyebrow">NET SCOREBOARD</text><view class="page-title">实时排名</view></view><text class="count-chip">按净胜分</text></view>
+      <view class="ranking-hero"><text class="hero-number">{{rankingLeader ? rankingLeader.netLabel : '0'}}</text><view class="hero-copy"><text>当前最高净胜分</text><text class="hero-name">{{rankingLeader ? rankingLeader.name : '等待首局结束'}}</text></view><text class="spark">↗</text></view>
+      <view wx:for="{{rankingRows}}" wx:key="id" class="ranking-row {{index === 0 ? 'leader' : ''}}"><text class="rank-number">{{item.rankLabel}}</text><view class="avatar {{item.avatarClass}}">{{item.initial}}</view><view class="rank-name"><text class="player-name">{{item.name}}</text><text class="player-record">{{item.wins}} 胜 · {{item.games}} 局</text></view><text class="net-score {{item.net < 0 ? 'negative' : ''}}">{{item.netLabel}}</text></view>
+      <text class="section-note">净胜分 = 你所在一方得分 − 对方得分；比分修改后自动重算。</text>
+    </view>
+
+    <view wx:elif="{{screen === 'admin'}}" class="content admin-page">
+      <button class="admin-return" data-screen="match" bindtap="switchScreen">← 返回比赛</button>
+      <view class="page-heading"><view><text class="eyebrow">CONTROL ROOM</text><view class="page-title">比赛管理</view></view><text class="count-chip">创建者专属</text></view>
+      <view class="admin-summary"><view class="summary-item"><text class="summary-value">{{playerCount}}</text><text class="summary-label">球员</text></view><view class="summary-item"><text class="summary-value">{{roundCount}}</text><text class="summary-label">赛程局数</text></view><view class="summary-item"><text class="summary-value">{{completedCount}}</text><text class="summary-label">已完成</text></view></view>
+      <view class="admin-panel"><view class="panel-heading"><text class="panel-title">参赛名单</text><text class="panel-subtitle">水平仅创建者可见</text></view>
+        <view wx:for="{{adminPlayers}}" wx:key="id" class="player-row"><view class="avatar avatar-small avatar-{{index % 5}}">{{item.name[0]}}</view><input class="player-name-input" value="{{item.name}}" data-id="{{item.id}}" data-field="name" bindinput="changePlayer" bindblur="savePlayerEdits" /><picker class="player-level" range="{{levels}}" value="{{item.levelIndex}}" data-id="{{item.id}}" data-field="level" bindchange="changePlayer"><text class="level-badge level-{{item.level}}">{{item.levelLabel}} ▾</text></picker><button class="remove-button" data-id="{{item.id}}" bindtap="removePlayer">×</button></view>
+        <view class="add-player"><input class="form-input add-player-name" data-field="newPlayerName" value="{{newPlayerName}}" placeholder="添加球员姓名" bindinput="onInput" /><picker class="new-level" range="{{levels}}" value="{{newPlayerLevelIndex}}" bindchange="changeNewLevel"><text>{{newPlayerLevelLabel}} ▾</text></picker><button class="small-button" bindtap="addPlayer">添加</button></view>
+        <view class="roster-tools"><text>保存为下次比赛的默认名单</text><button class="roster-save-button" bindtap="saveDefaultRoster">保存默认名单</button></view>
+      </view>
+      <view class="admin-panel"><view class="panel-heading"><text class="panel-title">赛程控制</text><text class="panel-subtitle">默认 180 分钟</text></view><text class="rule-copy">✓ 局数均衡 · 受控连打换组 · 实力匹配（等级冲突时均衡兜底）</text><button class="primary-button full-button" disabled="{{scheduleBusy}}" loading="{{scheduleAction === 'generateSchedule'}}" bindtap="generateSchedule">生成 / 重排待开始赛程 <text class="button-arrow">→</text></button><view class="extension-actions"><text>当前赛程结束后可继续加赛</text><view class="extension-buttons"><button class="extension-button" disabled="{{scheduleBusy}}" loading="{{scheduleAction === 'extendSchedule'}}" bindtap="extendSchedule">继续加赛 5 局</button></view></view></view>
+      <view class="admin-panel restart-panel"><view class="panel-heading"><text class="panel-title">重新开始比赛</text><text class="panel-subtitle">沿用原邀请码</text></view><text class="rule-copy">中途重开或下次活动时，保留球员名单和当前参赛状态，重新安排 15 局。现有赛程、比分和排名将全部清空。</text><button class="extension-button restart-button" disabled="{{scheduleBusy}}" loading="{{scheduleAction === 'restartMatch'}}" bindtap="restartMatch">重新开始并安排 15 局</button></view>
+    </view>
+
+    <view wx:if="{{screen !== 'admin'}}" class="bottom-nav"><button class="nav-item {{screen === 'match' ? 'active' : ''}}" data-screen="match" bindtap="switchScreen"><text class="nav-icon">●</text><text>比赛</text></button><button class="nav-item {{screen === 'schedule' ? 'active' : ''}}" data-screen="schedule" bindtap="switchScreen"><text class="nav-icon">▤</text><text>赛程</text></button><button class="nav-item {{screen === 'ranking' ? 'active' : ''}}" data-screen="ranking" bindtap="switchScreen"><text class="nav-icon">↗</text><text>排名</text></button><button wx:if="{{isCreator}}" class="nav-item" data-screen="admin" bindtap="switchScreen"><text class="nav-icon">⚙</text><text>管理</text></button></view>
+  </view>
+
+  <view wx:if="{{editingRound}}" class="modal-backdrop" catchtap="closeEdit"><view class="edit-modal" catchtap="noop"><view class="modal-top"><view><text class="eyebrow">EDIT SCORE</text><view class="modal-title">修改第 {{editingRound.seq}} 局</view></view><button class="close-button" bindtap="closeEdit">×</button></view><text class="modal-matchup">{{editingRound.team1}} VS {{editingRound.team2}}</text><view class="edit-score-grid"><input class="edit-score-input" data-field="editScore1" value="{{editScore1}}" type="number" bindinput="onInput" /><text>:</text><input class="edit-score-input" data-field="editScore2" value="{{editScore2}}" type="number" bindinput="onInput" /></view><button class="primary-button full-button" bindtap="saveEdit">保存新比分</button></view></view>
 </view>
-
-
-
-
-
-
-

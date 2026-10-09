@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "tool": "cloud_fn_deploy",
+  "clientName": "Codex",
+  "result": {
+    "success": true,
+    "taskId": "confirmation_cloud_fn_deploy_fec98118-ef46-4170-b8b5-1cd56dbd80ec",
+    "taskType": "confirmation_cloud_fn_deploy",
+    "status": "success",
+    "createdAt": 1791533646809,
+    "updatedAt": 1791533663084,
+    "detail": "execution_success",
+    "result": {
+      "match": {
+        "filesCount": 7,
+        "packSize": "13.1 KB"
+      }
+    }
+  },
+  "pendingTask": {
+    "taskId": "confirmation_cloud_fn_deploy_fec98118-ef46-4170-b8b5-1cd56dbd80ec",
+    "tool": "cloud_fn_deploy",
+    "appid": "wx5175a5a34861be70",
+    "env": "cloud1-d0gwahv5k7b959610",
+    "path": "C:\\Users\\Administrator.DESKTOP-OV0JDHK\\Desktop\\work\\badminton-miniapp\\cloudfunctions\\match",
+    "lastStatus": "success",
+    "pollCount": 1
+  },
+  "sourceSha256": {
+    "index.js": "266f986f5f8f370c391de5100506486ecf1d29bd8342a6d85bb673979b8c8f26",
+    "logic.js": "5e97a36527daf7d6cd6f7b94837ac3d928302d27b582f53d973c78cc8e1c10a9",
+    "scheduler.cjs": "3683aa85762d74614d3c67febe8cf51247d49a16e6a0437502c6ffe0b59fe2ef",
+    "package.json": "6e739f66d4599e14fc100a6ed67fb7ba9714825310ff57b4695c191a7c8bbbb3"
+  },
+  "initialResponse": {
+    "success": true,
+    "taskId": "confirmation_cloud_fn_deploy_fec98118-ef46-4170-b8b5-1cd56dbd80ec",
+    "taskType": "confirmation_cloud_fn_deploy",
+    "status": "pending",
+    "message": "Waiting for user confirmation."
+  },
+  "verifiedAt": "2026-10-09T08:19:00.378599+00:00",
+  "functionInfo": {
+    "name": "match",
+    "status": "Active",
+    "timeout": 3,
+    "runtime": "Nodejs16.13"
+  },
+  "simulatorRefresh": {
+    "success": true
+  },
+  "readOnlyCloudCheck": {
+    "verifiedAt": "2026-10-09T08:18:16.985Z",
+    "action": "getMatch",
+    "function": "match",
+    "env": "cloud1-d0gwahv5k7b959610",
+    "ok": true,
+    "requestId": "21d3f640-731c-4881-92a5-63df9da3837f",
+    "revision": 0,
+    "playerCount": 0,
+    "roundCount": 0,
+    "error": null
+  }
+}

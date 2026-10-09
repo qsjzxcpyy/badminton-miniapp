@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-09T08:13:31.669Z",
+  "mode": "real page and cloud action; in-memory database and mocked cloud transport/modal choices",
+  "realCloudWrites": 0,
+  "oldCompleted": 3,
+  "cancelledUnchanged": true,
+  "inviteRetained": true,
+  "rosterRetained": true,
+  "freshRounds": 15,
+  "firstSequence": 1,
+  "firstInternalId": 16,
+  "clearedScores": true,
+  "clearedRanking": true,
+  "nativeInputs": [
+    "",
+    ""
+  ],
+  "screenshots": [
+    "wechat-restart-admin.jpg",
+    "wechat-restart-fresh-match.jpg"
+  ]
+}

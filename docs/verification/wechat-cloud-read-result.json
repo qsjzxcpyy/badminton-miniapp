@@ -1,0 +1,12 @@
+{
+  "verifiedAt": "2026-10-09T08:18:16.985Z",
+  "action": "getMatch",
+  "function": "match",
+  "env": "cloud1-d0gwahv5k7b959610",
+  "ok": true,
+  "requestId": "21d3f640-731c-4881-92a5-63df9da3837f",
+  "revision": 0,
+  "playerCount": 0,
+  "roundCount": 0,
+  "error": null
+}

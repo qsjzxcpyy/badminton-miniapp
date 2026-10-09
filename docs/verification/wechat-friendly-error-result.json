@@ -1,0 +1,10 @@
+{
+  "verifiedAt": "2026-10-09T08:26:10.882Z",
+  "cloudRequestsMocked": true,
+  "realCloudWrites": 0,
+  "insufficientPlayers": "至少需要 4 名参赛球员，请先添加或恢复球员后再排赛",
+  "unknownError": "操作未完成，请稍后重试",
+  "clearsOldNotice": true,
+  "controlsUnlocked": true,
+  "screenshot": "wechat-friendly-error.jpg"
+}

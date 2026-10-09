@@ -1,0 +1,4608 @@
+{
+  "generatedAt": "2026-10-09T05:56:41.473Z",
+  "cases": 576,
+  "joined": 384,
+  "withdrawn": 192,
+  "failures": [],
+  "samples": [
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 4,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          5,
+          4,
+          6,
+          4,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5,
+            6
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          1,
+          3,
+          4,
+          1,
+          2,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 14,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          5,
+          4,
+          6,
+          4,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          1,
+          3,
+          4,
+          1,
+          2,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          5,
+          4,
+          6,
+          4,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          1,
+          3,
+          4,
+          1,
+          2,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          5,
+          4,
+          6,
+          4,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMM",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          1,
+          3,
+          4,
+          1,
+          2,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          2,
+          2,
+          1,
+          3
+        ],
+        "opponentCoverage": [
+          4,
+          3,
+          6,
+          4,
+          4,
+          3,
+          4
+        ],
+        "highMiddleCoverage": [
+          [],
+          [
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          3,
+          1,
+          2,
+          2,
+          3,
+          2,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 16,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          5,
+          4,
+          5,
+          5,
+          5,
+          4,
+          4
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4
+          ],
+          [
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          3,
+          4,
+          4,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            4,
+            7
+          ],
+          [
+            3,
+            7
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 14,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          5,
+          5,
+          5,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            4,
+            7
+          ],
+          [
+            3,
+            7
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 5,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          1,
+          2,
+          2,
+          2,
+          2,
+          1,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          3,
+          5,
+          3,
+          5,
+          3,
+          6
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          1,
+          2,
+          3,
+          2,
+          2,
+          3,
+          7
+        ],
+        "doubleSpread": 6,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 16,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 18,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          5,
+          5,
+          5,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            4
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 5,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          3,
+          5,
+          3,
+          4,
+          3,
+          6
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMLL",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          14
+        ],
+        "spread": 3,
+        "doubles": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          2,
+          7
+        ],
+        "doubleSpread": 5,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 19,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 19,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          5,
+          5,
+          6,
+          5
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            4
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 4,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5,
+          3,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            2,
+            3,
+            4,
+            6
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          9,
+          9,
+          10,
+          9,
+          10,
+          9,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 14,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 14,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          6,
+          5,
+          6,
+          5,
+          5,
+          5,
+          7
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          6,
+          6,
+          7,
+          6,
+          6,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5,
+          3,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          9,
+          9,
+          10,
+          9,
+          10,
+          9,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 13,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          7,
+          7,
+          7,
+          5,
+          7,
+          6,
+          7
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5,
+          3,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          9,
+          9,
+          10,
+          9,
+          10,
+          9,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 13,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          7,
+          7,
+          7,
+          5,
+          7,
+          6,
+          7
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5,
+          3,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMM",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          9,
+          9,
+          10,
+          9,
+          10,
+          9,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 13,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          7,
+          7,
+          7,
+          5,
+          7,
+          6,
+          7
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          3,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 2,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          3,
+          5,
+          4,
+          4,
+          3,
+          4,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            4
+          ],
+          [],
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          9,
+          10,
+          9,
+          9,
+          10,
+          10,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 11,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 18,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          5,
+          7,
+          7,
+          7,
+          5,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          7,
+          5,
+          7,
+          7,
+          6,
+          6,
+          5,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 4,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          3,
+          4,
+          3,
+          4,
+          4,
+          4,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            4,
+            8
+          ],
+          [
+            4,
+            8
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          9,
+          10,
+          9,
+          9,
+          10,
+          10,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 13,
+        "maxQuartetRepeat": 3,
+        "repeatedFixtures": 2,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          5,
+          5,
+          4,
+          4,
+          5
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          7,
+          7,
+          7,
+          5,
+          5,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5,
+            8
+          ],
+          [
+            3,
+            4,
+            5,
+            8
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          1,
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          1,
+          2,
+          3,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          2,
+          4,
+          5,
+          3,
+          4,
+          4,
+          4,
+          6
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          9,
+          10,
+          9,
+          9,
+          10,
+          10,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 10,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 18,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          7,
+          6,
+          6,
+          6,
+          7
+        ],
+        "opponentCoverage": [
+          7,
+          6,
+          7,
+          7,
+          7,
+          6,
+          7,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 4,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          3,
+          3,
+          4,
+          4,
+          4,
+          5
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMLL",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          9,
+          10,
+          9,
+          9,
+          10,
+          10,
+          14
+        ],
+        "spread": 5,
+        "doubles": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 12,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 17,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          4,
+          7,
+          6,
+          6,
+          6,
+          7,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          7,
+          7,
+          6,
+          7,
+          7,
+          7,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 4,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          2,
+          4,
+          4,
+          2,
+          4,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            1,
+            3,
+            4,
+            6
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 14,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          8,
+          7,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        "opponentCoverage": [
+          7,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          7,
+          8
+        ],
+        "highMiddleCoverage": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          2,
+          4,
+          4,
+          2,
+          4,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          8,
+          7,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        "opponentCoverage": [
+          7,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          7,
+          8
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          2,
+          4,
+          4,
+          2,
+          4,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          8,
+          7,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        "opponentCoverage": [
+          7,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          7,
+          8
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          1,
+          3,
+          3,
+          1,
+          2,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          2,
+          4,
+          4,
+          2,
+          4,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "MMMMMMMM",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          9,
+          8,
+          8,
+          9,
+          8,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          8,
+          7,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        "opponentCoverage": [
+          7,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          7,
+          8
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "H",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3
+        ],
+        "opponentCoverage": [
+          2,
+          3,
+          3,
+          4,
+          4,
+          3,
+          3,
+          4,
+          6
+        ],
+        "highMiddleCoverage": [
+          [],
+          [],
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "H",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          8,
+          8,
+          8,
+          8,
+          9,
+          9,
+          7,
+          14
+        ],
+        "spread": 7,
+        "doubles": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 14,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          4,
+          6,
+          7,
+          5,
+          7,
+          6,
+          5,
+          7
+        ],
+        "opponentCoverage": [
+          8,
+          6,
+          7,
+          7,
+          7,
+          8,
+          8,
+          7,
+          8
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4
+          ],
+          [],
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "M",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          1,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3,
+          1,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          3,
+          4,
+          4,
+          3,
+          3,
+          5,
+          2,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            4,
+            9
+          ],
+          [
+            5,
+            9
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "M",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          9,
+          9,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 3,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 15,
+        "maxQuartetRepeat": 3,
+        "repeatedFixtures": 1,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          6,
+          5,
+          6,
+          4,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          8,
+          8,
+          8,
+          6,
+          6,
+          6,
+          8
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5,
+            9
+          ],
+          [
+            3,
+            4,
+            5,
+            9
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "X",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          3,
+          4,
+          4,
+          4,
+          2,
+          3,
+          4,
+          3,
+          5
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "X",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          9,
+          9,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 12,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          5,
+          5,
+          6,
+          7,
+          7,
+          7,
+          5,
+          8
+        ],
+        "opponentCoverage": [
+          7,
+          8,
+          8,
+          8,
+          7,
+          8,
+          7,
+          7,
+          8
+        ],
+        "highMiddleCoverage": [
+          [],
+          [
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "L",
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          2,
+          2,
+          4
+        ],
+        "spread": 3,
+        "doubles": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          2,
+          2,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          2,
+          3,
+          5,
+          3,
+          3,
+          6
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "joined",
+      "levels": "HHMMMXLL",
+      "level": "L",
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          9,
+          9,
+          8,
+          14
+        ],
+        "spread": 6,
+        "doubles": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "doubleSpread": 7,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 12,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          6,
+          6,
+          6,
+          5,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          8,
+          8,
+          8,
+          7,
+          8,
+          7,
+          8,
+          8,
+          8
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMM",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          4,
+          3,
+          4,
+          3
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          4,
+          3,
+          4,
+          3
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          5,
+          4,
+          5,
+          4
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMM",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          13,
+          13,
+          14,
+          13,
+          14,
+          13
+        ],
+        "spread": 1,
+        "doubles": [
+          6,
+          6,
+          7,
+          6,
+          7,
+          6
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 7,
+        "repeatedFixtures": 11,
+        "partnerCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMM",
+      "removed": 7,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "spread": 1,
+        "doubles": [
+          2,
+          1,
+          1,
+          1,
+          1,
+          2
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          5,
+          4,
+          4,
+          4,
+          4,
+          5
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMM",
+      "removed": 7,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          14,
+          13,
+          13,
+          13,
+          13,
+          14
+        ],
+        "spread": 1,
+        "doubles": [
+          7,
+          6,
+          6,
+          6,
+          6,
+          7
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 7,
+        "repeatedFixtures": 11,
+        "partnerCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMLL",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          4,
+          4
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          2
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          3,
+          3,
+          4,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          4,
+          5,
+          5
+        ],
+        "highMiddleCoverage": [
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMLL",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          13,
+          13,
+          13,
+          13,
+          14,
+          14
+        ],
+        "spread": 1,
+        "doubles": [
+          6,
+          6,
+          6,
+          6,
+          7,
+          7
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 13,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 7,
+        "repeatedFixtures": 13,
+        "partnerCoverage": [
+          5,
+          5,
+          5,
+          5,
+          4,
+          4
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMLL",
+      "removed": 7,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          4,
+          3,
+          3,
+          4
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 2,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          4,
+          3,
+          3,
+          4
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          5,
+          4,
+          4,
+          5
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMLL",
+      "removed": 7,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          13,
+          13,
+          14,
+          13,
+          13,
+          14
+        ],
+        "spread": 1,
+        "doubles": [
+          6,
+          6,
+          7,
+          6,
+          6,
+          7
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 2,
+        "fallbackRounds": 7,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 3,
+        "maxQuartetRepeat": 7,
+        "repeatedFixtures": 13,
+        "partnerCoverage": [
+          4,
+          4,
+          5,
+          5,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3,
+            4,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMM",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          2,
+          3
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          2,
+          3
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          5,
+          5,
+          3,
+          5
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMM",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          12,
+          12,
+          11,
+          11,
+          11,
+          12
+        ],
+        "spread": 1,
+        "doubles": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          2,
+          3
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMM",
+      "removed": 8,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          3,
+          3
+        ],
+        "spread": 1,
+        "doubles": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          3,
+          3
+        ],
+        "opponentCoverage": [
+          4,
+          5,
+          6,
+          5,
+          3,
+          5,
+          4
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMM",
+      "removed": 8,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          11,
+          12,
+          12,
+          11,
+          12,
+          11
+        ],
+        "spread": 1,
+        "doubles": [
+          2,
+          3,
+          3,
+          3,
+          2,
+          3,
+          3
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 18,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLL",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          2
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          3,
+          3,
+          2,
+          2
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          5,
+          6,
+          4,
+          4,
+          3
+        ],
+        "highMiddleCoverage": [
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLL",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          12,
+          11,
+          11,
+          11,
+          12,
+          12,
+          11
+        ],
+        "spread": 1,
+        "doubles": [
+          3,
+          2,
+          4,
+          3,
+          3,
+          3,
+          2
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 12,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 19,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          4,
+          5,
+          5,
+          6,
+          5,
+          4
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLL",
+      "removed": 8,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          2,
+          2,
+          4,
+          3
+        ],
+        "spread": 2,
+        "doubles": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          1
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          3,
+          2,
+          2,
+          4,
+          3
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          5,
+          3,
+          3,
+          6,
+          5
+        ],
+        "highMiddleCoverage": [
+          [
+            3
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLL",
+      "removed": 8,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          12,
+          11,
+          11,
+          11,
+          11,
+          12,
+          12
+        ],
+        "spread": 1,
+        "doubles": [
+          3,
+          1,
+          3,
+          2,
+          2,
+          4,
+          4
+        ],
+        "doubleSpread": 3,
+        "maxStreak": 2,
+        "maxRest": 1,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 15,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          5,
+          4,
+          6,
+          5,
+          6,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "highMiddleCoverage": [
+          [
+            3,
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMMM",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          2,
+          2,
+          3,
+          2,
+          2
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          2,
+          2,
+          1,
+          2,
+          2,
+          2
+        ],
+        "opponentCoverage": [
+          4,
+          4,
+          4,
+          2,
+          3,
+          4,
+          3,
+          4
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMMM",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          11,
+          10,
+          10,
+          9,
+          10,
+          11,
+          10,
+          9
+        ],
+        "spread": 2,
+        "doubles": [
+          2,
+          1,
+          0,
+          1,
+          2,
+          2,
+          1,
+          1
+        ],
+        "doubleSpread": 2,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "opponentCoverage": [
+          7,
+          7,
+          6,
+          6,
+          7,
+          7,
+          7,
+          7
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMMM",
+      "removed": 9,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          2,
+          3,
+          3,
+          2,
+          2,
+          2,
+          3,
+          3
+        ],
+        "spread": 1,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 1,
+        "openingOverlap": 0,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          3,
+          2,
+          2,
+          2,
+          3,
+          3
+        ],
+        "opponentCoverage": [
+          3,
+          5,
+          4,
+          4,
+          3,
+          3,
+          5,
+          5
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "MMMMMMMMM",
+      "removed": 9,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          9,
+          10,
+          11,
+          9,
+          10,
+          10,
+          11,
+          10
+        ],
+        "spread": 2,
+        "doubles": [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 0,
+        "fallbackRounds": 0,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 20,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "opponentCoverage": [
+          7,
+          7,
+          7,
+          7,
+          6,
+          7,
+          7,
+          6
+        ],
+        "highMiddleCoverage": []
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLLL",
+      "removed": 1,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          3,
+          2,
+          2,
+          3,
+          2,
+          2
+        ],
+        "spread": 1,
+        "doubles": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 1,
+        "fallbackRounds": 3,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          3,
+          3,
+          3,
+          2,
+          2,
+          3,
+          2,
+          2
+        ],
+        "opponentCoverage": [
+          5,
+          6,
+          4,
+          4,
+          3,
+          4,
+          3,
+          3
+        ],
+        "highMiddleCoverage": [
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLLL",
+      "removed": 1,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "spread": 0,
+        "doubles": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "doubleSpread": 0,
+        "maxStreak": 1,
+        "maxRest": 1,
+        "maxRestAfterDouble": 0,
+        "openingOverlap": 0,
+        "fallbackRounds": 10,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 2,
+        "maxQuartetRepeat": 10,
+        "repeatedFixtures": 17,
+        "partnerCoverage": [
+          1,
+          1,
+          1,
+          2,
+          2,
+          1,
+          2,
+          2
+        ],
+        "opponentCoverage": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          2,
+          3,
+          3
+        ],
+        "highMiddleCoverage": [
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLLL",
+      "removed": 9,
+      "roundCount": 5,
+      "metrics": {
+        "counts": [
+          3,
+          3,
+          2,
+          2,
+          2,
+          3,
+          3,
+          2
+        ],
+        "spread": 1,
+        "doubles": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 0,
+        "fallbackRounds": 4,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 5,
+        "maxQuartetRepeat": 1,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          2,
+          3,
+          2,
+          2,
+          2,
+          3,
+          2,
+          2
+        ],
+        "opponentCoverage": [
+          5,
+          5,
+          4,
+          4,
+          4,
+          6,
+          6,
+          4
+        ],
+        "highMiddleCoverage": [
+          [],
+          []
+        ]
+      },
+      "maxBoundaryStreak": 2
+    },
+    {
+      "kind": "withdrawn",
+      "levels": "HHMMMXLLL",
+      "removed": 9,
+      "roundCount": 20,
+      "metrics": {
+        "counts": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          11,
+          9
+        ],
+        "spread": 2,
+        "doubles": [
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "doubleSpread": 1,
+        "maxStreak": 2,
+        "maxRest": 2,
+        "maxRestAfterDouble": 2,
+        "openingOverlap": 0,
+        "fallbackRounds": 13,
+        "unbalancedSplits": 0,
+        "distinctQuartets": 18,
+        "maxQuartetRepeat": 2,
+        "repeatedFixtures": 0,
+        "partnerCoverage": [
+          4,
+          5,
+          7,
+          6,
+          5,
+          5,
+          5,
+          5
+        ],
+        "opponentCoverage": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "highMiddleCoverage": [
+          [
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "maxBoundaryStreak": 2
+    }
+  ]
+}

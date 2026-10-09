@@ -1,0 +1,19 @@
+{
+  "verifiedAt": "2026-10-09T07:49:06.715Z",
+  "cloudCallsMocked": true,
+  "realCloudWrites": false,
+  "automaticPolls": 1,
+  "typedScoresAfterPolling": [
+    "21",
+    "18"
+  ],
+  "nativeInputValuesAfterPolling": [
+    "21",
+    "18"
+  ],
+  "emptyInputEventTriggered": true,
+  "blankRejected": true,
+  "failurePreservesDraft": true,
+  "nextRoundClearsDraft": true,
+  "explicitZeroAccepted": true
+}

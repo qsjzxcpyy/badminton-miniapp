@@ -1,0 +1,89 @@
+{
+  "verifiedAt": "2026-10-09T05:57:46.384Z",
+  "levelPicker": true,
+  "levelAutoSave": true,
+  "levelSaveBeforeGeneration": {
+    "waited": true,
+    "calls": [
+      {
+        "action": "savePlayers",
+        "revision": 1
+      },
+      {
+        "action": "generateSchedule",
+        "revision": 2
+      }
+    ],
+    "level": "X",
+    "revision": 3,
+    "error": ""
+  },
+  "scheduleCountAndFilter": true,
+  "scheduleRows": 15,
+  "metrics": {
+    "counts": [
+      7,
+      7,
+      8,
+      8,
+      8,
+      7,
+      8,
+      7
+    ],
+    "spread": 1,
+    "doubles": [
+      0,
+      0,
+      2,
+      2,
+      2,
+      1,
+      2,
+      1
+    ],
+    "doubleSpread": 2,
+    "maxStreak": 2,
+    "maxRest": 2,
+    "maxRestAfterDouble": 2,
+    "openingOverlap": 0,
+    "fallbackRounds": 0,
+    "unbalancedSplits": 0,
+    "distinctQuartets": 8,
+    "maxQuartetRepeat": 3,
+    "repeatedFixtures": 1,
+    "partnerCoverage": [
+      3,
+      3,
+      4,
+      4,
+      5,
+      3,
+      4,
+      4
+    ],
+    "opponentCoverage": [
+      4,
+      4,
+      7,
+      7,
+      7,
+      5,
+      5,
+      5
+    ],
+    "highMiddleCoverage": [
+      [
+        3,
+        4,
+        5
+      ],
+      [
+        3,
+        4,
+        5
+      ]
+    ]
+  },
+  "cloudCallsMocked": true
+}

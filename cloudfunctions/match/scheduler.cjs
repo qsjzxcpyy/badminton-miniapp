@@ -1,673 +1,279 @@
-﻿const LEVEL_WEIGHT = { H: 3, M: 2, X: 1.5, L: 1 }
+// One scheduler for the web preview and the packaged WeChat cloud function.
+const LEVEL_WEIGHT = { H: 3, M: 2, X: 1.5, L: 1 }
 
 function combinations(items, size) {
-  const output = []
-  const walk = (start, chosen) => {
-    if (chosen.length === size) {
-      output.push([...chosen])
-      return
-    }
-    for (let index = start; index <= items.length - (size - chosen.length); index += 1) {
-      chosen.push(items[index])
-      walk(index + 1, chosen)
-      chosen.pop()
+  const result = []
+  function visit(start, chosen) {
+    if (chosen.length === size) { result.push([...chosen]); return }
+    for (let i = start; i <= items.length - size + chosen.length; i++) {
+      chosen.push(items[i]); visit(i + 1, chosen); chosen.pop()
     }
   }
-  walk(0, [])
-  return output
-}
-
-function shuffle(items, random) {
-  const output = [...items]
-  for (let index = output.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(random() * (index + 1))
-    ;[output[index], output[swapIndex]] = [output[swapIndex], output[index]]
-  }
-  return output
-}
-
-function pairKey(left, right) {
-  return [left, right].sort((a, b) => a - b).join(':')
-}
-
-function quartetKey(ids) {
-  return [...ids].sort((a, b) => a - b).join(',')
-}
-
-function addPair(history, left, right) {
-  const key = pairKey(left, right)
-  history[key] = (history[key] || 0) + 1
-}
-
-function pairRepeat(history, left, right) {
-  return history[pairKey(left, right)] || 0
-}
-
-function recordRoundHistory(state, ids, arranged) {
-  for (let left = 0; left < ids.length; left += 1) {
-    for (let right = left + 1; right < ids.length; right += 1) {
-      addPair(state.groupPairs, ids[left], ids[right])
-    }
-  }
-  addPair(state.teamPairs, arranged[0], arranged[1])
-  addPair(state.teamPairs, arranged[2], arranged[3])
-  for (const left of arranged.slice(0, 2)) {
-    for (const right of arranged.slice(2, 4)) addPair(state.opponentPairs, left, right)
-  }
-  const key = quartetKey(ids)
-  state.quartets[key] = (state.quartets[key] || 0) + 1
-  state.maxQuartetCount = Math.max(state.maxQuartetCount, state.quartets[key])
+  visit(0, [])
+  return result
 }
 
 function isLegalGroup(ids, players) {
   if (ids.length !== 4 || new Set(ids).size !== 4) return false
-  const levelFor = id => players.find(player => player.id === id)?.level
-  const levels = ids.map(levelFor)
-  if (levels.some(level => !level)) return false
+  const levels = ids.map(id => players.find(p => p.id === id)?.level)
+  if (levels.some(level => LEVEL_WEIGHT[level] === undefined)) return false
   if (levels.includes('H') && (levels.includes('X') || levels.includes('L'))) return false
-  const high = levels.filter(level => level === 'H').length
-  const middle = levels.filter(level => level === 'M').length
-  return !(high === 1 && middle === 3)
+  if (levels.filter(l => l === 'H').length === 1 && levels.filter(l => l === 'M').length === 3) return false
+  return !(levels.filter(l => l === 'M').length === 1 && levels.filter(l => l === 'L').length === 3)
 }
 
-function isNinePlayerQualityGroup(ids, players) {
-  const levelCounts = players.reduce((counts, player) => {
-    counts[player.level] = (counts[player.level] || 0) + 1
-    return counts
-  }, {})
-  const isTargetShape = players.length === 9
-    && levelCounts.H === 2
-    && levelCounts.M === 3
-    && levelCounts.X === 1
-    && levelCounts.L === 3
-  if (!isTargetShape) return true
-
-  const levels = ids.map(id => players.find(player => player.id === id)?.level)
-  if (levels.includes('H')) return true
-  const middleCount = levels.filter(level => level === 'M').length
-  const nextMiddleCount = levels.filter(level => level === 'X').length
-  const lowCount = levels.filter(level => level === 'L').length
-  return !(middleCount === 1 && nextMiddleCount === 0 && lowCount === 3)
-}
-
-function isNinePlayerRotationShape(players) {
-  const levelCounts = players.reduce((counts, player) => {
-    counts[player.level] = (counts[player.level] || 0) + 1
-    return counts
-  }, {})
-  return players.length === 9
-    && levelCounts.H === 2
-    && levelCounts.M === 3
-    && levelCounts.X === 1
-    && levelCounts.L === 3
-}
-
-function previewRotationMetrics(state, candidate, playerIds) {
-  const rests = { ...state.restLengths }
-  const streaks = { ...state.playStreaks }
-  let currentMaxRest = 0
-  let currentMaxStreak = 0
-  let maxRest = state.maxRestLength || 0
-  let maxStreak = state.maxPlayStreak || 0
-  let restPressure = 0
-  playerIds.forEach(id => {
-    if (candidate.includes(id)) {
-      rests[id] = 0
-      streaks[id] += 1
-    } else {
-      rests[id] += 1
-      streaks[id] = 0
-    }
-    currentMaxRest = Math.max(currentMaxRest, rests[id])
-    currentMaxStreak = Math.max(currentMaxStreak, streaks[id])
-    maxRest = Math.max(maxRest, rests[id])
-    maxStreak = Math.max(maxStreak, streaks[id])
-    restPressure += rests[id] ** 2
-  })
-  return { rests, streaks, maxRest, maxStreak, currentMaxRest, currentMaxStreak, restPressure }
-}
-
-function applyRotationMetrics(state, candidate, playerIds) {
-  const metrics = previewRotationMetrics(state, candidate, playerIds)
-  state.restLengths = metrics.rests
-  state.playStreaks = metrics.streaks
-  state.maxRestLength = metrics.maxRest
-  state.maxPlayStreak = metrics.maxStreak
-  state.restPressure = metrics.restPressure
-}
-
-function isHighLowFallback(ids, players) {
-  const levels = ids.map(id => players.find(player => player.id === id)?.level)
-  return levels.filter(level => level === 'H').length === 1
-    && levels.filter(level => level === 'M').length === 2
-    && levels.filter(level => level === 'L').length === 1
-}
-
-function compareNumbers(left, right) {
-  for (let index = 0; index < left.length; index += 1) {
-    if (left[index] !== right[index]) return left[index] - right[index]
+// Compute achievable participation under the same rest/streak rules as search.
+// A late joiner's historical deficit cannot be recovered in a short extension.
+function participationBounds(rounds, streak, rest, lastRun, limit, restLimit, memo) {
+  if (!rounds) return [0, 0]
+  const key = [rounds, streak, rest, lastRun].join(',')
+  if (memo.has(key)) return memo.get(key)
+  let minimum = Infinity, maximum = -Infinity
+  for (const playing of [false, true]) {
+    const nextStreak = playing ? streak + 1 : 0
+    const nextRest = playing ? 0 : rest + 1
+    const nextRun = playing ? lastRun : streak || lastRun
+    if (nextStreak > limit || nextRest > restLimit || (nextRest >= 3 && nextRun >= 2)) continue
+    const [low, high] = participationBounds(rounds - 1, nextStreak, nextRest, nextRun, limit, restLimit, memo)
+    minimum = Math.min(minimum, Number(playing) + low)
+    maximum = Math.max(maximum, Number(playing) + high)
   }
+  const result = [minimum, maximum]
+  memo.set(key, result)
+  return result
+}
+
+function quotaBounds(counts, rounds, participation) {
+  const total = counts.reduce((sum, count) => sum + count, 0) + rounds * 4
+  const minimum = counts.map((count, i) => count + participation[i][0])
+  const maximum = counts.map((count, i) => count + participation[i][1])
+  if (minimum.reduce((s,c) => s+c,0) > total || maximum.reduce((s,c) => s+c,0) < total) return null
+  const atFloor = floor => counts.map((_, i) => Math.min(maximum[i], Math.max(minimum[i], floor)))
+  let floor = Math.min(...counts)
+  while (floor < Math.max(...maximum) && atFloor(floor + 1).reduce((s,c) => s+c,0) <= total) floor++
+  const lower = atFloor(floor)
+  const extra = total - lower.reduce((sum, count) => sum + count, 0)
+  // Leave the extra slots flexible: assigning them to specific IDs can make
+  // an otherwise feasible level rotation impossible (e.g. two highs together).
+  const upper = atFloor(floor + Number(extra > 0))
+  return { lower, upper }
+}
+
+function compare(left, right) {
+  for (let i = 0; i < left.length; i++) if (left[i] !== right[i]) return left[i] - right[i]
   return 0
 }
 
-function levelBalance(split, levelFor) {
-  const left = split.slice(0, 2).reduce((sum, id) => sum + LEVEL_WEIGHT[levelFor(id)], 0)
-  const right = split.slice(2).reduce((sum, id) => sum + LEVEL_WEIGHT[levelFor(id)], 0)
-  return Math.abs(left - right)
-}
-
-function arrangeTeams(ids, levelFor, state, random) {
-  const splits = [
-    [ids[0], ids[1], ids[2], ids[3]],
-    [ids[0], ids[2], ids[1], ids[3]],
-    [ids[0], ids[3], ids[1], ids[2]]
-  ]
-  const scored = splits.map(split => ({
-    split,
-    cost: [
-      levelBalance(split, levelFor),
-      pairRepeat(state.teamPairs, split[0], split[1]) + pairRepeat(state.teamPairs, split[2], split[3]),
-      split.slice(0, 2).reduce((sum, left) => sum + split.slice(2, 4).reduce((inner, right) => inner + pairRepeat(state.opponentPairs, left, right), 0), 0),
-      random()
-    ]
-  }))
-  scored.sort((left, right) => compareNumbers(left.cost, right.cost))
-  return scored[0].split
-}
-
-function stateCost(state, playerIds, levelFor) {
-  const values = playerIds.map(id => state.counts[id])
-  const mean = values.reduce((sum, value) => sum + value, 0) / values.length
-  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0)
-  const highIds = playerIds.filter(id => levelFor(id) === 'H')
-  const middleIds = playerIds.filter(id => levelFor(id) === 'M')
-  const highPartnerCoverage = highIds.length && middleIds.length
-    ? highIds.map(highId => middleIds.filter(middleId => pairRepeat(state.groupPairs, highId, middleId) > 0))
-    : []
-  const minimumHighPartnerCoverage = highPartnerCoverage.length ? Math.min(...highPartnerCoverage.map(partners => partners.length)) : 0
-  const totalHighPartnerCoverage = highPartnerCoverage.reduce((sum, partners) => sum + partners.length, 0)
-  const rotationCost = state.rotationMode
-    ? [state.maxRestLength || 0, state.maxPlayStreak || 0, state.restPressure || 0]
-    : []
-  return [
-    Math.max(...values) - Math.min(...values),
-    ...rotationCost,
-    state.maxConsecutive,
-    state.consecutive,
-    variance,
-    -minimumHighPartnerCoverage,
-    -totalHighPartnerCoverage,
-    state.highMiddleRepeatScore,
-    state.maxQuartetCount,
-    state.groupRepeatScore,
-    state.teamRepeatScore,
-    state.opponentRepeatScore,
-    state.tieBreaker
-  ]
-}
-
-function isHighPairTransition(candidate, previous, levelFor, totalHigh) {
-  if (!previous || totalHigh !== 2) return true
-  const previousHigh = previous.filter(id => levelFor(id) === 'H').length
-  if (previousHigh !== 2) return true
-  const currentHigh = candidate.filter(id => levelFor(id) === 'H').length
-  return currentHigh === 0 || currentHigh === 2
-}
-
-function cloneState(state) {
-  return {
-    ...state,
-    counts: { ...state.counts },
-    lastPlayed: { ...state.lastPlayed },
-    groupPairs: { ...state.groupPairs },
-    teamPairs: { ...state.teamPairs },
-    opponentPairs: { ...state.opponentPairs },
-    quartets: { ...state.quartets },
-    rounds: [...state.rounds],
-    restLengths: { ...state.restLengths },
-    playStreaks: { ...state.playStreaks }
-  }
-}
-
-
-function structuredCoverage(ids, partnerIds, groupPairs) {
-  return ids.map(id => new Set(partnerIds.filter(partnerId => pairRepeat(groupPairs, id, partnerId) > 0)))
-}
-
-function structuredStateCost(state, playerIds, highIds, middleIds, lowIds) {
-  const values = playerIds.map(id => state.counts[id])
-  const mean = values.reduce((sum, value) => sum + value, 0) / values.length
-  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0)
-  const highCoverage = structuredCoverage(highIds, middleIds, state.groupPairs)
-  const lowCoverage = structuredCoverage(lowIds, middleIds, state.groupPairs)
-  const missingHighCoverage = highCoverage.reduce((sum, partners) => sum + Math.max(0, middleIds.length - partners.size), 0)
-  const missingLowCoverage = lowCoverage.reduce((sum, partners) => sum + Math.max(0, middleIds.length - partners.size), 0)
-  return [
-    Math.max(...values) - Math.min(...values),
-    variance,
-    missingHighCoverage,
-    missingLowCoverage,
-    state.maxQuartetCount,
-    state.groupRepeatScore,
-    state.highMiddleRepeatScore,
-    state.lowMiddleRepeatScore || 0,
-    state.teamRepeatScore,
-    state.opponentRepeatScore,
-    state.maxConsecutive,
-    state.consecutive,
-    state.tieBreaker
-  ]
-}
-
-function rolePattern(roundCount, random) {
-  const highCount = random() < 0.5 ? Math.floor(roundCount / 2) : Math.ceil(roundCount / 2)
-  const startHigh = highCount > roundCount / 2
-  return Array.from({ length: roundCount }, (_, index) => {
-    const alternatingHigh = (index + (startHigh ? 0 : 1)) % 2 === 0
-    return alternatingHigh && index < highCount * 2 ? 'high' : 'mixed'
-  })
-}
-
-function buildStructuredHighRotation(players, roundCount, random) {
-  const highIds = players.filter(player => player.level === 'H').map(player => player.id)
-  const middleIds = players.filter(player => player.level === 'M').map(player => player.id)
-  const lowIds = players.filter(player => player.level === 'L').map(player => player.id)
-  const nextMiddleIds = players.filter(player => player.level === 'X').map(player => player.id)
-  const isSupportedShape = highIds.length === 2
-    && (middleIds.length === 3 && nextMiddleIds.length === 1 && lowIds.length === 2
-      || middleIds.length === 4 && nextMiddleIds.length === 0 && lowIds.length === 2)
-  if (!isSupportedShape || roundCount <= 0) return null
-
-  const playerIds = players.map(player => player.id)
-  const levelFor = id => players.find(player => player.id === id)?.level
-  const highCandidates = combinations(middleIds, 2).map(pair => [highIds[0], pair[0], highIds[1], pair[1]])
-  const nonHighIds = playerIds.filter(id => levelFor(id) !== 'H')
-  const mixedCandidates = combinations(nonHighIds, 4).filter(ids => isLegalGroup(ids, players))
-  if (!highCandidates.length || !mixedCandidates.length) return null
-
-  const initial = {
-    counts: Object.fromEntries(playerIds.map(id => [id, 0])),
-    lastPlayed: Object.fromEntries(playerIds.map(id => [id, -1000])),
-    previous: null,
-    rounds: [],
-    consecutive: 0,
-    maxConsecutive: 0,
-    groupPairs: {},
-    teamPairs: {},
-    opponentPairs: {},
-    quartets: {},
-    maxQuartetCount: 0,
-    groupRepeatScore: 0,
-    highMiddleRepeatScore: 0,
-    lowMiddleRepeatScore: 0,
-    teamRepeatScore: 0,
-    opponentRepeatScore: 0,
-    rotationMode: false,
-    restLengths: Object.fromEntries(playerIds.map(id => [id, 0])),
-    playStreaks: Object.fromEntries(playerIds.map(id => [id, 0])),
-    maxRestLength: 0,
-    maxPlayStreak: 0,
-    restPressure: 0,
-    tieBreaker: random()
-  }
-  const pattern = rolePattern(roundCount, random)
-  let beam = [initial]
-  const beamWidth = 500
-
-  for (let step = 0; step < roundCount; step += 1) {
-    const expanded = []
-    const candidates = shuffle(pattern[step] === 'high' ? highCandidates : mixedCandidates, random)
-    beam.forEach(state => {
-      const nonOverlapping = state.previous
-        ? candidates.filter(candidate => candidate.every(id => !state.previous.includes(id)))
-        : candidates
-      const candidatePool = nonOverlapping.length ? nonOverlapping : candidates
-      candidatePool.forEach(candidate => {
-        const next = cloneState(state)
-        const overlap = next.previous ? candidate.filter(id => next.previous.includes(id)).length : 0
-        const arranged = arrangeTeams(candidate, levelFor, next, random)
-        const groupRepeat = candidate.reduce((sum, id, index) => sum + candidate.slice(index + 1).reduce((inner, other) => inner + pairRepeat(next.groupPairs, id, other), 0), 0)
-        const highMiddleRepeat = candidate.reduce((sum, id, index) => sum + candidate.slice(index + 1).reduce((inner, other) => {
-          const levels = [levelFor(id), levelFor(other)]
-          return inner + (levels.includes('H') && levels.includes('M') ? pairRepeat(next.groupPairs, id, other) : 0)
-        }, 0), 0)
-        const lowMiddleRepeat = candidate.reduce((sum, id, index) => sum + candidate.slice(index + 1).reduce((inner, other) => {
-          const levels = [levelFor(id), levelFor(other)]
-          return inner + (levels.includes('L') && levels.includes('M') ? pairRepeat(next.groupPairs, id, other) : 0)
-        }, 0), 0)
-        const teamRepeat = pairRepeat(next.teamPairs, arranged[0], arranged[1]) + pairRepeat(next.teamPairs, arranged[2], arranged[3])
-        const opponentRepeat = arranged.slice(0, 2).reduce((sum, left) => sum + arranged.slice(2, 4).reduce((inner, right) => inner + pairRepeat(next.opponentPairs, left, right), 0), 0)
-        candidate.forEach(id => {
-          next.counts[id] += 1
-          next.lastPlayed[id] = step
-        })
-        next.consecutive += overlap
-        next.maxConsecutive = Math.max(next.maxConsecutive, overlap)
-        next.groupRepeatScore += groupRepeat
-        next.highMiddleRepeatScore += highMiddleRepeat
-        next.lowMiddleRepeatScore += lowMiddleRepeat
-        next.teamRepeatScore += teamRepeat
-        next.opponentRepeatScore += opponentRepeat
-        recordRoundHistory(next, candidate, arranged)
-        next.previous = candidate
-        next.rounds.push({ p1: arranged[0], p2: arranged[1], p3: arranged[2], p4: arranged[3] })
-        next.tieBreaker = random()
-        expanded.push(next)
-      })
-    })
-    expanded.sort((left, right) => compareNumbers(
-      structuredStateCost(left, playerIds, highIds, middleIds, lowIds),
-      structuredStateCost(right, playerIds, highIds, middleIds, lowIds)
-    ))
-    beam = expanded.slice(0, beamWidth)
-  }
-
-  const targetCoverage = middleIds.length
-  const valid = beam.filter(state => {
-    const spread = Math.max(...playerIds.map(id => state.counts[id])) - Math.min(...playerIds.map(id => state.counts[id]))
-    const highCoverage = structuredCoverage(highIds, middleIds, state.groupPairs)
-    const lowCoverage = structuredCoverage(lowIds, middleIds, state.groupPairs)
-    return spread <= 1
-      && highCoverage.every(partners => partners.size >= targetCoverage)
-      && lowCoverage.every(partners => partners.size >= targetCoverage)
-  })
-  const selected = (valid.length ? valid : beam).sort((left, right) => compareNumbers(
-    structuredStateCost(left, playerIds, highIds, middleIds, lowIds),
-    structuredStateCost(right, playerIds, highIds, middleIds, lowIds)
-  ))[0]
-  return selected?.rounds || []
-}
-function balancedMiddlePairs(ids, count, random) {
-  if (count <= 0) return []
-  const order = shuffle(ids, random)
-  const cycle = [
-    [order[0], order[1]],
-    [order[2], order[3]],
-    [order[0], order[2]],
-    [order[1], order[3]],
-    [order[0], order[3]],
-    [order[1], order[2]]
-  ]
-  const offset = Math.floor(random() * cycle.length)
-  return Array.from({ length: count }, (_, index) => cycle[(offset + index) % cycle.length])
-}
-
-function repairTwoHighFourMiddleTwoLow(rounds, players, previousRounds, random) {
-  const highIds = players.filter(player => player.level === 'H').map(player => player.id)
-  const middleIds = players.filter(player => player.level === 'M').map(player => player.id)
-  const lowIds = players.filter(player => player.level === 'L').map(player => player.id)
-  if (highIds.length !== 2 || middleIds.length !== 4 || lowIds.length !== 2 || previousRounds.length) return null
-
-  const highTurn = random() >= 0.5
-  const highRoundCount = highTurn ? Math.ceil(rounds.length / 2) : Math.floor(rounds.length / 2)
-  const mixedRoundCount = rounds.length - highRoundCount
-  const highMiddlePairs = balancedMiddlePairs(middleIds, highRoundCount, random)
-  const mixedMiddlePairs = balancedMiddlePairs(middleIds, mixedRoundCount, random)
-  const lowOrder = shuffle(lowIds, random)
-  let highIndex = 0
-  let mixedIndex = 0
-
-  rounds.forEach((round, index) => {
-    const playHigh = highTurn ? index % 2 === 0 : index % 2 === 1
-    if (playHigh) {
-      const pair = highMiddlePairs[highIndex]
-      ;[round.p1, round.p2, round.p3, round.p4] = [highIds[0], pair[0], highIds[1], pair[1]]
-      highIndex += 1
-    } else {
-      const pair = mixedMiddlePairs[mixedIndex]
-      ;[round.p1, round.p2, round.p3, round.p4] = [pair[0], lowOrder[0], pair[1], lowOrder[1]]
-      mixedIndex += 1
-    }
-  })
-  return rounds
-}
-function repairHighPartnerFreshness(rounds, players, previousRounds, random) {
-  return repairTwoHighFourMiddleTwoLow(rounds, players, previousRounds, random) || rounds
-}
-function buildScheduleAttempt({ players, roundCount, random = Math.random, previousRounds = [] }) {
-  const playerIds = players.map(player => player.id)
-  if (playerIds.length < 4 || roundCount <= 0) return []
-  const levelFor = id => players.find(player => player.id === id)?.level
-  const totalHigh = players.filter(player => player.level === 'H').length
-  const allGroups = combinations(playerIds, 4)
-  const legalCandidates = allGroups.filter(ids => isLegalGroup(ids, players) && isNinePlayerQualityGroup(ids, players))
-  const hasNormalHighCandidate = legalCandidates.some(ids => ids.some(id => levelFor(id) === 'H'))
-  const fallbackCandidates = allGroups.filter(ids => isHighLowFallback(ids, players))
-  const candidates = shuffle(hasNormalHighCandidate ? legalCandidates : legalCandidates.concat(fallbackCandidates), random)
-  if (!candidates.length) return []
-  const rotationMode = isNinePlayerRotationShape(players)
-
-  const initial = {
-    counts: Object.fromEntries(playerIds.map(id => [id, 0])),
-    lastPlayed: Object.fromEntries(playerIds.map(id => [id, -1000])),
-    previous: null,
-    rounds: [],
-    consecutive: 0,
-    maxConsecutive: 0,
-    groupPairs: {},
-    teamPairs: {},
-    opponentPairs: {},
-    quartets: {},
-    maxQuartetCount: 0,
-    groupRepeatScore: 0,
-    highMiddleRepeatScore: 0,
-    teamRepeatScore: 0,
-    opponentRepeatScore: 0,
-    rotationMode,
-    restLengths: Object.fromEntries(playerIds.map(id => [id, 0])),
-    playStreaks: Object.fromEntries(playerIds.map(id => [id, 0])),
-    maxRestLength: 0,
-    maxPlayStreak: 0,
-    restPressure: 0,
-    tieBreaker: random()
-  }
-
-  previousRounds.forEach((round, index) => {
-    const ids = [round.p1, round.p2, round.p3, round.p4].filter(id => initial.counts[id] !== undefined)
-    if (ids.length !== 4) return
-    ids.forEach(id => {
-      initial.counts[id] += 1
-      initial.lastPlayed[id] = index
-    })
-    const arranged = [round.p1, round.p2, round.p3, round.p4]
-    recordRoundHistory(initial, ids, arranged)
-    initial.previous = ids
-    if (rotationMode) applyRotationMetrics(initial, ids, playerIds)
-  })
-
-  let beam = [initial]
-  const beamWidth = 500
-  for (let step = 0; step < roundCount; step += 1) {
-    const roundIndex = previousRounds.length + step
-    const expanded = []
-    beam.forEach(state => {
-      const legal = candidates.filter(candidate => isHighPairTransition(candidate, state.previous, levelFor, totalHigh))
-      const pool = legal.length ? legal : candidates
-      const minimumOverlap = state.previous
-        ? Math.min(...pool.map(candidate => candidate.filter(id => state.previous.includes(id)).length))
-        : 0
-      const rotationPool = state.rotationMode
-        ? pool
-        : pool.filter(candidate => !state.previous || candidate.filter(id => state.previous.includes(id)).length === minimumOverlap)
-      const candidatePool = state.rotationMode
-        ? (() => {
-          const scored = rotationPool.map(candidate => {
-            const projectedCounts = playerIds.map(id => state.counts[id] + (candidate.includes(id) ? 1 : 0))
-            return {
-              candidate,
-              metrics: previewRotationMetrics(state, candidate, playerIds),
-              projectedSpread: Math.max(...projectedCounts) - Math.min(...projectedCounts),
-              overlap: state.previous ? candidate.filter(id => state.previous.includes(id)).length : 0,
-              random: random()
-            }
-          })
-          const fair = scored.filter(item => item.metrics.currentMaxRest <= 2 && item.metrics.currentMaxStreak <= 2)
-          const source = fair.length ? fair : scored
-          source.sort((left, right) => compareNumbers([
-            left.projectedSpread,
-            left.metrics.currentMaxStreak,
-            left.metrics.restPressure,
-            left.overlap,
-            left.random
-          ], [
-            right.projectedSpread,
-            right.metrics.currentMaxStreak,
-            right.metrics.restPressure,
-            right.overlap,
-            right.random
-          ]))
-          return source.slice(0, 48).map(item => item.candidate)
-        })()
-        : rotationPool
-      candidatePool.forEach(candidate => {
-        const next = cloneState(state)
-        const overlap = next.previous ? candidate.filter(id => next.previous.includes(id)).length : 0
-        const arranged = arrangeTeams(candidate, levelFor, next, random)
-        const groupRepeat = candidate.reduce((sum, id, index) => sum + candidate.slice(index + 1).reduce((inner, other) => inner + pairRepeat(next.groupPairs, id, other), 0), 0)
-        const highMiddleRepeat = candidate.reduce((sum, id, index) => sum + candidate.slice(index + 1).reduce((inner, other) => {
-          const levels = [levelFor(id), levelFor(other)]
-          return inner + (levels.includes('H') && levels.includes('M') ? pairRepeat(next.groupPairs, id, other) : 0)
-        }, 0), 0)
-        const teamRepeat = pairRepeat(next.teamPairs, arranged[0], arranged[1]) + pairRepeat(next.teamPairs, arranged[2], arranged[3])
-        const opponentRepeat = arranged.slice(0, 2).reduce((sum, left) => sum + arranged.slice(2, 4).reduce((inner, right) => inner + pairRepeat(next.opponentPairs, left, right), 0), 0)
-        candidate.forEach(id => {
-          next.counts[id] += 1
-          next.lastPlayed[id] = roundIndex
-        })
-        if (next.rotationMode) applyRotationMetrics(next, candidate, playerIds)
-        next.consecutive += overlap
-        next.maxConsecutive = Math.max(next.maxConsecutive, overlap)
-        next.groupRepeatScore += groupRepeat
-        next.highMiddleRepeatScore += highMiddleRepeat
-        next.teamRepeatScore += teamRepeat
-        next.opponentRepeatScore += opponentRepeat
-        recordRoundHistory(next, candidate, arranged)
-        next.previous = candidate
-        next.rounds.push({ p1: arranged[0], p2: arranged[1], p3: arranged[2], p4: arranged[3] })
-        next.tieBreaker = random()
-        expanded.push(next)
-      })
-    })
-    expanded.sort((left, right) => compareNumbers(stateCost(left, playerIds, levelFor), stateCost(right, playerIds, levelFor)))
-    beam = expanded.slice(0, beamWidth)
-  }
-
-  beam.sort((left, right) => compareNumbers(stateCost(left, playerIds, levelFor), stateCost(right, playerIds, levelFor)))
-  const generatedRounds = repairHighPartnerFreshness(beam[0]?.rounds || [], players, previousRounds, random)
-  return repairNinePlayerBalance(generatedRounds, players, previousRounds)
-}
-
-function roundPlayerIds(round) {
-  return [round.p1, round.p2, round.p3, round.p4]
-}
-
-function hasNinePlayerLongRest(rounds, playerIds) {
-  return playerIds.some(playerId => {
-    const played = rounds.map(round => roundPlayerIds(round).includes(playerId))
-    for (let index = 0; index < played.length;) {
-      if (!played[index]) {
-        index += 1
-        continue
-      }
-      const runStart = index
-      while (index < played.length && played[index]) index += 1
-      const runLength = index - runStart
-      const restStart = index
-      while (index < played.length && !played[index]) index += 1
-      const restLength = index - restStart
-      if (index < played.length && runLength >= 2 && restLength >= 3) return true
-    }
-    return false
-  })
-}
-
-function replaceRoundPlayer(rounds, roundIndex, fromId, toId, players) {
-  const nextRounds = rounds.map(round => ({ ...round }))
-  const round = nextRounds[roundIndex]
-  const ids = roundPlayerIds(round)
-  if (!ids.includes(fromId) || ids.includes(toId)) return null
-  const slot = ['p1', 'p2', 'p3', 'p4'].find(key => round[key] === fromId)
-  round[slot] = toId
-  const activePlayers = players.filter(player => player.status !== 'withdrawn')
-  if (!isLegalGroup(roundPlayerIds(round), activePlayers) || !isNinePlayerQualityGroup(roundPlayerIds(round), activePlayers)) return null
-  return nextRounds
-}
-
-function repairNinePlayerBalance(rounds, players, previousRounds) {
-  if (!isNinePlayerRotationShape(players) || !rounds.length) return rounds
-  const allRounds = [...previousRounds, ...rounds]
-  const playerIds = players.map(player => player.id)
-  const levelFor = id => players.find(player => player.id === id)?.level
-  for (let attempt = 0; attempt < rounds.length * players.length; attempt += 1) {
-    const counts = Object.fromEntries(playerIds.map(id => [id, 0]))
-    allRounds.forEach(round => roundPlayerIds(round).forEach(id => { if (counts[id] !== undefined) counts[id] += 1 }))
-    const values = Object.values(counts)
-    if (Math.max(...values) - Math.min(...values) <= 1) return rounds
-    const over = playerIds.filter(id => counts[id] === Math.max(...values) && levelFor(id) !== 'H')
-    const under = playerIds.filter(id => counts[id] === Math.min(...values))
-    let repaired = false
-    for (const roundIndex of rounds.keys()) {
-      const combinedIndex = previousRounds.length + roundIndex
-      for (const fromId of over) {
-        for (const toId of under) {
-          const candidateRounds = replaceRoundPlayer(rounds, roundIndex, fromId, toId, players)
-          if (!candidateRounds) continue
-          const candidateAllRounds = [...previousRounds, ...candidateRounds]
-          const totalHigh = players.filter(player => player.level === 'H').length
-          const transitionsValid = candidateAllRounds.every((round, index) => index === 0 || isHighPairTransition(roundPlayerIds(round), roundPlayerIds(candidateAllRounds[index - 1]), levelFor, totalHigh))
-          if (!transitionsValid || hasNinePlayerLongRest(candidateAllRounds, playerIds)) continue
-          const nextCounts = { ...counts, [fromId]: counts[fromId] - 1, [toId]: counts[toId] + 1 }
-          if (Math.max(...Object.values(nextCounts)) > Math.max(...values)) continue
-          rounds.splice(0, rounds.length, ...candidateRounds)
-          allRounds.splice(0, allRounds.length, ...candidateAllRounds)
-          repaired = true
-          break
-        }
-        if (repaired) break
-      }
-      if (repaired) break
-    }
-    if (!repaired) return rounds
-  }
-  return rounds
-}
-
-function scheduleSpread(rounds, previousRounds, playerIds) {
-  const counts = Object.fromEntries(playerIds.map(id => [id, 0]))
-  previousRounds.concat(rounds).forEach(round => {
-    ;[round.p1, round.p2, round.p3, round.p4].forEach(id => {
-      if (counts[id] !== undefined) counts[id] += 1
-    })
-  })
-  const values = Object.values(counts)
-  return values.length ? Math.max(...values) - Math.min(...values) : Infinity
-}
-
 function buildSchedule({ players, roundCount, random = Math.random, previousRounds = [] }) {
-  if (!previousRounds.length) {
-    const structured = buildStructuredHighRotation(players, roundCount, random)
-    if (structured?.length === roundCount) return structured
+  players = players.filter(p => p.status !== 'withdrawn')
+  const n = players.length
+  if (n < 4 || !Number.isInteger(roundCount) || roundCount <= 0) return []
+  if (new Set(players.map(p => p.id)).size !== n || players.some(p => LEVEL_WEIGHT[p.level] === undefined)) {
+    throw new Error('球员 ID 必须唯一，等级必须为高、中、次中或低')
   }
-  const playerIds = players.map(player => player.id)
-  const eligibleIds = [...new Set(combinations(playerIds, 4).filter(ids => isLegalGroup(ids, players)).flat())]
-  if (eligibleIds.length < playerIds.length) {
-    return buildScheduleAttempt({ players, roundCount, random, previousRounds })
+  const indexFor = new Map(players.map((p, i) => [p.id, i]))
+  const indices = players.map((_, i) => i)
+  const limit = n >= 6 ? 2 : n === 5 ? 4 : Infinity
+  const restLimit = n >= 8 ? 3 : 2
+  const matrixSize = n * n
+  const pairIndex = (a, b) => Math.min(a, b) * n + Math.max(a, b)
+  const groups = combinations(indices, 4).map((ids, index) => {
+    const splits = [[ids[0],ids[1],ids[2],ids[3]], [ids[0],ids[2],ids[1],ids[3]], [ids[0],ids[3],ids[1],ids[2]]]
+    const balance = split => Math.abs(LEVEL_WEIGHT[players[split[0]].level] + LEVEL_WEIGHT[players[split[1]].level]
+      - LEVEL_WEIGHT[players[split[2]].level] - LEVEL_WEIGHT[players[split[3]].level])
+    const gap = Math.min(...splits.map(balance))
+    return { ids, index, set: new Set(ids), legal: isLegalGroup(ids.map(i => players[i].id), players), gap,
+      splits: splits.filter(split => balance(split) === gap),
+      pairs: combinations(ids, 2).map(([a,b]) => pairIndex(a,b)) }
+  })
+  const groupForKey = new Map(groups.map(g => [g.ids.join(','), g.index]))
+  const initial = {
+    counts: Array(n).fill(0), streaks: Array(n).fill(0), rests: Array(n).fill(0), lastRuns: Array(n).fill(0), doubles: Array(n).fill(0),
+    partners: Array(matrixSize).fill(0), opponents: Array(matrixSize).fill(0), coPlayers: Array(matrixSize).fill(0),
+    quartets: Array(groups.length).fill(0), fixtures: new Map(), previous: new Set(), rounds: []
   }
-  let best = []
-  let bestSpread = Infinity
-  const attempts = previousRounds.length ? 1 : (isNinePlayerRotationShape(players) ? 1 : 4)
-  for (let attempt = 0; attempt < attempts; attempt += 1) {
-    const rounds = buildScheduleAttempt({ players, roundCount, random, previousRounds })
-    const spread = scheduleSpread(rounds, previousRounds, eligibleIds)
-    if (spread < bestSpread) {
-      best = rounds
-      bestSpread = spread
+  const fixtureKey = split => [split.slice(0,2).sort((a,b) => a-b).join(','), split.slice(2).sort((a,b) => a-b).join(',')].sort().join('|')
+  function record(state, split, group, delta) {
+    if (group) { state.quartets[group.index] += delta; for (const pair of group.pairs) state.coPlayers[pair] += delta }
+    for (const [a,b] of [[split[0],split[1]], [split[2],split[3]]]) {
+      if (a !== undefined && b !== undefined) state.partners[pairIndex(a,b)] += delta
     }
-    if (spread <= 1) return rounds
+    for (const a of split.slice(0,2)) for (const b of split.slice(2)) {
+      if (a !== undefined && b !== undefined) state.opponents[pairIndex(a,b)] += delta
+    }
+    const key = fixtureKey(split.filter(i => i !== undefined))
+    state.fixtures.set(key, (state.fixtures.get(key) || 0) + delta)
   }
-  return best
+  for (const round of previousRounds) {
+    const split = [round.p1,round.p2,round.p3,round.p4].map(id => indexFor.get(id))
+    const selected = new Set(split.filter(i => i !== undefined))
+    for (const i of indices) {
+      if (selected.has(i)) { initial.counts[i]++; if (initial.streaks[i]) initial.doubles[i]++; initial.streaks[i]++; initial.rests[i] = 0 }
+      else { if (initial.streaks[i]) initial.lastRuns[i] = initial.streaks[i]; initial.streaks[i] = 0; initial.rests[i]++ }
+    }
+    const group = groups[groupForKey.get([...selected].sort((a,b) => a-b).join(','))]
+    record(initial, split, group, 1)
+    initial.previous = selected
+  }
+  // Players absent from every historical round have just joined; their waiting
+  // clock starts now, while their zero game count still receives catch-up priority.
+  for (const i of indices) if (!initial.counts[i]) initial.rests[i] = 0
+  const participationMemo = new Map()
+  const participation = indices.map(i => participationBounds(roundCount, initial.streaks[i], initial.rests[i],
+    initial.lastRuns[i], limit, restLimit, participationMemo))
+  const quotas = quotaBounds(initial.counts, roundCount, participation)
+  if (!quotas) throw new Error('当前历史赛程无法同时满足局数与休息约束，请增加场次或重新生成未打赛程')
+  const { lower, upper } = quotas
+  const initialTotal = initial.counts.reduce((sum, count) => sum + count, 0)
+  const preferred = groups.filter(g => g.legal)
+
+  // Necessary subset capacity bounds reject impossible strict-level quotas
+  // before search, rather than silently starving players of a rare level.
+  function capacityBounds(pool) {
+    const bounds = []
+    // Exhaustive subset pruning is only needed for the supported small rosters.
+    if (n > 12) return bounds
+    for (let mask = 1; mask < 2 ** n; mask++) {
+      const subset = indices.filter(i => mask & (2 ** i))
+      const max = Math.max(0, ...pool.map(g => g.ids.filter(i => mask & (2 ** i)).length))
+      const demand = subset.reduce((sum, i) => sum + Math.max(0, lower[i] - initial.counts[i]), 0)
+      if (demand > max * roundCount) return null
+      if (max < Math.min(4, subset.length) && demand >= max * roundCount * 0.8) bounds.push({ subset, max })
+    }
+    return bounds
+  }
+
+  function teamChoice(group, state) {
+    let chosen, best = Infinity
+    for (const split of group.splits) {
+      const partnerCounts = [state.partners[pairIndex(split[0],split[1])], state.partners[pairIndex(split[2],split[3])]]
+      let highMiddle = 0
+      for (const [a,b] of [[split[0],split[1]], [split[2],split[3]]]) {
+        if ([players[a].level, players[b].level].sort().join('') === 'HM') highMiddle += state.partners[pairIndex(a,b)] === 0 ? -8 : state.partners[pairIndex(a,b)]
+      }
+      const opponents = split.slice(0,2).reduce((sum,a) => sum + split.slice(2).reduce((s,b) => s + state.opponents[pairIndex(a,b)], 0), 0)
+      const cost = partnerCounts.reduce((sum, count) => sum + count * 4, 0) + highMiddle + opponents * 0.25
+        + (state.fixtures.get(fixtureKey(split)) || 0) * 8 + random() * 0.2
+      if (cost < best) { best = cost; chosen = split }
+    }
+    return { split: chosen, cost: best }
+  }
+
+  function attempt(pool, bounds, nodeLimit, prioritizeRest, balanceDoubles = false) {
+    const state = {
+      ...initial,
+      counts: [...initial.counts], streaks: [...initial.streaks], rests: [...initial.rests], lastRuns: [...initial.lastRuns], doubles: [...initial.doubles],
+      partners: [...initial.partners], opponents: [...initial.opponents], coPlayers: [...initial.coPlayers],
+      quartets: [...initial.quartets], fixtures: new Map(initial.fixtures), rounds: []
+    }
+    let nodes = 0
+    function visit(step) {
+      if (step === roundCount) return state.counts.every((count,i) => count >= lower[i] && count <= upper[i])
+      if (++nodes > nodeLimit) return false
+      const remaining = roundCount - step - 1
+      const scored = []
+      for (const group of pool) {
+        let overlap = 0, valid = true, pace = 0, restCost = 0, doubleCost = 0, capacity = 0, demand = 0
+        for (const i of indices) {
+          const playing = group.set.has(i)
+          const count = state.counts[i] + Number(playing)
+          const streak = playing ? state.streaks[i] + 1 : 0
+          const rest = playing ? 0 : state.rests[i] + 1
+          if (playing && state.previous.has(i)) overlap++
+          const maxFuture = limit === Infinity ? remaining : remaining - Math.floor((remaining + streak) / (limit + 1))
+          const lastRun = state.streaks[i] || state.lastRuns[i]
+          const doubles = state.doubles[i] + Number(playing && state.streaks[i] > 0)
+          // Seven players require at least one overlap per transition. Search
+          // for a narrow shared double quota before accepting a looser solution.
+          const doubleFloor = Math.floor((roundCount - 1) / n)
+          const doubleCeiling = Math.ceil((roundCount - 1) / n) + 1
+          if (balanceDoubles && (doubles > doubleCeiling || doubles + Math.ceil(remaining / 2) < doubleFloor)) { valid = false; break }
+          if (count > upper[i] || streak > limit || rest > restLimit || (rest >= 3 && lastRun >= 2) || count + maxFuture < lower[i]) { valid = false; break }
+          capacity += Math.min(upper[i] - count, maxFuture)
+          demand += Math.max(0, lower[i] - count)
+          pace += (count - (initialTotal + (step + 1) * 4) / n) ** 2
+          restCost += rest * rest
+          if (playing && state.streaks[i]) doubleCost += state.doubles[i] * 2 + 1
+        }
+        if (!valid || capacity < remaining * 4 || demand > remaining * 4) continue
+        if (n >= 6 && overlap > 2) continue
+        if (n >= 8 && step === 1 && !previousRounds.length && overlap !== 0) continue
+        if (bounds.some(({subset,max}) => subset.reduce((sum,i) => sum + Math.max(0, lower[i] - state.counts[i] - Number(group.set.has(i))), 0) > max * remaining)) continue
+        const team = teamChoice(group, state)
+        const cost = pace * 5 + restCost * 2 + doubleCost * 1.5 + overlap * 2
+          + state.quartets[group.index] * 12 + group.pairs.reduce((sum,pair) => sum + state.coPlayers[pair], 0) * 0.25
+          + team.cost + (group.legal ? 0 : 12) + group.gap * 3 + random() * 0.5
+        scored.push({ group, split: team.split, cost, restCost })
+      }
+      scored.sort((a,b) => (prioritizeRest ? a.restCost - b.restCost : 0) || a.cost - b.cost)
+      for (const { group, split } of scored) {
+        const streaks = [...state.streaks], rests = [...state.rests], lastRuns = [...state.lastRuns], previous = state.previous
+        for (const i of indices) {
+          if (group.set.has(i)) { state.counts[i]++; if (state.streaks[i]) state.doubles[i]++; state.streaks[i]++; state.rests[i] = 0 }
+          else { if (state.streaks[i]) state.lastRuns[i] = state.streaks[i]; state.streaks[i] = 0; state.rests[i]++ }
+        }
+        record(state, split, group, 1)
+        state.previous = group.set
+        state.rounds.push(split)
+        if (visit(step + 1)) return state
+        state.rounds.pop()
+        record(state, split, group, -1)
+        for (const i of group.ids) { state.counts[i]--; if (streaks[i]) state.doubles[i]-- }
+        state.streaks = streaks; state.rests = rests; state.lastRuns = lastRuns; state.previous = previous
+        if (nodes > nodeLimit) break
+      }
+      return false
+    }
+    return visit(0)
+  }
+
+  function quality(state) {
+    const all = previousRounds.map(r => [r.p1,r.p2,r.p3,r.p4].map(id => indexFor.get(id))).concat(state.rounds)
+    let maxRest = 0, maxStreak = 0, fallback = 0, imbalance = 0
+    const rests = Array(n).fill(0), streaks = Array(n).fill(0)
+    for (const split of all) {
+      for (const i of indices) { const playing = split.includes(i); rests[i] = playing ? 0 : rests[i] + 1; streaks[i] = playing ? streaks[i] + 1 : 0; maxRest = Math.max(maxRest, rests[i]); maxStreak = Math.max(maxStreak, streaks[i]) }
+    }
+    for (const split of state.rounds) {
+      if (!isLegalGroup(split.map(i => players[i].id), players)) fallback++
+      imbalance += Math.abs(split.slice(0,2).reduce((s,i) => s + LEVEL_WEIGHT[players[i].level],0) - split.slice(2).reduce((s,i) => s + LEVEL_WEIGHT[players[i].level],0))
+    }
+    let missingHM = 0, missingPartners = 0
+    for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) {
+      if (!state.partners[pairIndex(a,b)]) {
+        missingPartners++
+        if ([players[a].level, players[b].level].sort().join('') === 'HM') missingHM++
+      }
+    }
+    const repeatedFixtures = [...state.fixtures.values()].reduce((sum,count) => sum + count * Math.max(0,count - 1), 0)
+    // Within the hard rest/streak limits, coverage must precede minimizing
+    // doubles. Otherwise the search simply chooses two alternating quartets.
+    return [fallback, missingHM, Math.max(...state.quartets), repeatedFixtures,
+      Math.max(...state.doubles) - Math.min(...state.doubles), maxRest, missingPartners,
+      state.doubles.reduce((s,c) => s + c,0), imbalance, state.partners.reduce((s,c) => s + c*c,0)]
+  }
+
+  let best, bestCost
+  // Search strict-level rotations first. Only relax levels; quotas, opening
+  // rest and streak constraints remain hard, including when extending history.
+  for (const pool of [preferred, groups]) {
+    if (!pool.length) continue
+    const bounds = capacityBounds(pool)
+    if (!bounds) continue
+    const modes = n === 7 && !previousRounds.length ? [true, false] : [false]
+    for (const balanceDoubles of modes) {
+      for (let i = 0; i < 8; i++) {
+        const state = attempt(pool, bounds, 2500, !balanceDoubles && i >= 4, balanceDoubles)
+        if (!state) continue
+        const cost = quality(state)
+        if (!best || compare(cost,bestCost) < 0) { best = state; bestCost = cost }
+      }
+      if (best) break
+    }
+    if (best) break
+  }
+  if (!best) throw new Error('当前历史赛程无法同时满足局数与休息约束，请增加场次或重新生成未打赛程')
+  return best.rounds.map(split => ({ p1: players[split[0]].id, p2: players[split[1]].id, p3: players[split[2]].id, p4: players[split[3]].id }))
 }
 
-module.exports = { buildSchedule, isLegalGroup };
-
-
+module.exports = { buildSchedule, isLegalGroup }
