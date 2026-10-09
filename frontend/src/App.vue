@@ -154,7 +154,7 @@
           </div>
           <div class="admin-panel">
             <div class="panel-heading"><h4>赛程控制</h4><span>默认 180 分钟</span></div>
-            <p class="rule-copy"><span class="rule-check">✓</span>严格等级组合 · 两高绑定轮换 · 局数尽量均衡</p>
+            <p class="rule-copy"><span class="rule-check">✓</span>局数均衡 · 受控连打换组 · 实力匹配（等级冲突时均衡兜底）</p>
             <button class="primary-button full-button" @click="generateSchedule">重新生成未开始赛程 <span class="button-arrow">→</span></button>
             <div class="extension-actions">
               <span>当前赛程结束后可继续加赛</span>
@@ -336,57 +336,66 @@ export default {
       return this.players.filter(player => (player.status || 'active') === 'active').map(player => player.id)
     },
     generateSchedule(showMessage = true) {
-      if (!this.rounds.length) {
-        this.rounds = Array.from({ length: 15 }, (_, index) => ({
-          id: index + 1,
-          seq: index + 1,
-          p1: 0, p2: 0, p3: 0, p4: 0,
-          score1: null, score2: null, status: 'pending'
-        }))
-      }
-      const pending = this.rounds.filter(round => round.status === 'pending')
+      const rounds = this.rounds.length ? this.rounds : Array.from({ length: 15 }, (_, index) => ({
+        id: index + 1, seq: index + 1,
+        p1: 0, p2: 0, p3: 0, p4: 0,
+        score1: null, score2: null, status: 'pending'
+      }))
+      const pending = rounds.filter(round => round.status === 'pending')
       if (!pending.length) {
         if (showMessage) this.showToast('没有待开始赛程可调整', 'error')
         return false
       }
       const activePlayers = this.players.filter(player => (player.status || 'active') === 'active')
       if (activePlayers.length < 4) {
-        if (showMessage) this.showToast('至少需要 4 名正常球员才能排赛', 'error')
+        this.showToast('至少需要 4 名正常球员才能排赛', 'error')
         return false
       }
-      const previousRounds = this.rounds.filter(round => round.status === 'completed' || round.status === 'active')
-      const generated = buildGeneratedSchedule({
-        players: activePlayers,
-        roundCount: pending.length,
-        previousRounds,
-        random: Math.random
-      })
-      if (generated.length !== pending.length) {
-        if (showMessage) this.showToast('当前等级和人员组合无法生成合法赛程', 'error')
+      const previousRounds = rounds.filter(round => round.status === 'completed' || round.status === 'active')
+      try {
+        const generated = buildGeneratedSchedule({
+          players: activePlayers, roundCount: pending.length,
+          previousRounds, random: Math.random
+        })
+        if (generated.length !== pending.length) throw new Error('当前人员组合无法生成完整赛程')
+        pending.forEach((round, index) => {
+          Object.assign(round, generated[index], { score1: null, score2: null })
+        })
+        if (!this.currentRound && pending[0]) pending[0].status = 'active'
+        this.rounds = rounds
+      } catch (error) {
+        this.showToast(error.message || '排赛失败，请调整人员或场次', 'error')
         return false
       }
-      pending.forEach((round, index) => {
-        Object.assign(round, generated[index], { score1: null, score2: null })
-      })
-      if (!this.currentRound && pending[0]) pending[0].status = 'active'
-      if (showMessage) this.showToast('赛程已按局数、休息时间和随机轮换重新生成')
+      if (showMessage) this.showToast('赛程已按局数、休息、搭档轮换和实力匹配重新生成')
       return true
-    },    extendSchedule(count) {
-      if (this.activeIds().length < 4) {
+    },
+    extendSchedule(count) {
+      const activePlayers = this.players.filter(player => (player.status || 'active') === 'active')
+      if (activePlayers.length < 4) {
         this.showToast('至少需要 4 名正常球员才能加赛', 'error')
-        return
+        return false
       }
       const nextSeq = Math.max(0, ...this.rounds.map(round => round.seq)) + 1
-      const newRounds = Array.from({ length: count }, (_, index) => ({
-        id: Math.max(0, ...this.rounds.map(round => round.id)) + index + 1,
-        seq: nextSeq + index,
-        p1: 0, p2: 0, p3: 0, p4: 0,
-        score1: null, score2: null, status: 'pending'
-      }))
-      this.rounds.push(...newRounds)
-      this.generateSchedule(false)
-      if (!this.currentRound && newRounds[0]) newRounds[0].status = 'active'
+      const nextId = Math.max(0, ...this.rounds.map(round => round.id)) + 1
+      try {
+        const generated = buildGeneratedSchedule({
+          players: activePlayers, roundCount: count,
+          previousRounds: this.rounds, random: Math.random
+        })
+        if (generated.length !== count) throw new Error('当前人员组合无法生成完整加赛')
+        const newRounds = generated.map((round, index) => ({
+          ...round, id: nextId + index, seq: nextSeq + index,
+          score1: null, score2: null, status: 'pending'
+        }))
+        if (!this.currentRound && newRounds[0]) newRounds[0].status = 'active'
+        this.rounds.push(...newRounds)
+      } catch (error) {
+        this.showToast(error.message || '加赛失败，请调整人员或场次', 'error')
+        return false
+      }
       this.showToast('已追加 ' + count + ' 局，历史比分和排名保持不变')
+      return true
     }
   }
 }

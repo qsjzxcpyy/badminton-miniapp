@@ -34,16 +34,23 @@ for (const [index, players] of playerSets.entries()) {
     rounds.forEach((round, roundIndex) => {
       const ids = idsOf(round)
       assert.equal(new Set(ids).size, 4)
-      assert.equal(isLegalGroup(ids, players), true)
+      if (index === 0) assert.equal(isLegalGroup(ids, players), true)
       ids.forEach(id => { counts[id] += 1 })
       const highCount = ids.filter(id => players.find(player => player.id === id).level === 'H').length
-      assert.ok(highCount === 0 || highCount === 2)
+      if (index === 0) assert.ok(highCount === 0 || highCount === 2)
       if (roundIndex > 0) {
         const previous = idsOf(rounds[roundIndex - 1])
-        assert.equal(ids.some(id => previous.includes(id)), false)
+        const overlap = ids.filter(id => previous.includes(id)).length
+        assert.ok(overlap <= 2)
+        if (roundIndex === 1) assert.equal(overlap, 0)
       }
     })
 
+    for (const player of players) {
+      let streak = 0
+      for (const round of rounds) { streak = idsOf(round).includes(player.id) ? streak + 1 : 0; assert.ok(streak <= 2) }
+    }
+    if (index === 1) assert.ok(rounds.some(round => !isLegalGroup(idsOf(round), players)), 'incompatible quotas require level fallback')
     const values = Object.values(counts)
     assert.ok(Math.max(...values) - Math.min(...values) <= 1)
   })

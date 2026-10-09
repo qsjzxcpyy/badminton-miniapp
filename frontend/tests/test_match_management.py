@@ -21,7 +21,20 @@ def open_match():
 def test_extend_appends_rounds():
     playwright, browser, context, page = open_match()
     page.locator(".icon-button").click()
+    page.locator(".admin-panel .primary-button").first.click()
+    before = page.evaluate("() => JSON.stringify(document.querySelector('.app-shell').__vueParentComponent.proxy.rounds)")
     page.locator(".extension-button").first.click()
+    rounds = page.evaluate("() => document.querySelector('.app-shell').__vueParentComponent.proxy.rounds")
+    assert json.loads(before) == rounds[:15]
+    counts = {player_id: 0 for player_id in range(1, 9)}
+    streaks = counts.copy()
+    for round in rounds:
+        selected = {round[key] for key in ('p1', 'p2', 'p3', 'p4')}
+        for player_id in counts:
+            counts[player_id] += int(player_id in selected)
+            streaks[player_id] = streaks[player_id] + 1 if player_id in selected else 0
+            assert streaks[player_id] <= 2
+    assert max(counts.values()) - min(counts.values()) <= 1
     page.locator(".text-button").click()
     page.locator(".bottom-nav button").nth(1).click()
     assert page.locator(".schedule-row").count() == 20
@@ -101,11 +114,11 @@ def test_guest_does_not_see_admin_entry():
 def test_scheduler_balances_six_seven_eight_players():
     cases = [
         (["H", "H", "M", "M", "M", "M"], 0, 2),
-        (["H", "H", "M", "M", "M", "M", "M"], 1, 1),
-        (["H", "H", "M", "M", "M", "L", "L", "L"], 1, 0),
+        (["H", "H", "M", "M", "M", "M", "M"], 1, 2),
+        (["H", "H", "M", "M", "M", "L", "L", "L"], 1, 2),
         (["H", "H", "M", "M", "M", "M", "L", "L"], 1, 2),
-        (["H", "H", "M", "M", "X", "X", "L", "L"], 1, 1),
-        (["H", "H", "M", "M", "M", "X", "L", "L"], 1, 1),
+        (["H", "H", "M", "M", "X", "X", "L", "L"], 1, 2),
+        (["H", "H", "M", "M", "M", "X", "L", "L"], 1, 2),
     ]
     for levels, expected_spread, expected_max_overlap in cases:
         playwright = sync_playwright().start()
@@ -129,15 +142,23 @@ def test_scheduler_balances_six_seven_eight_players():
             ids = [round[key] for key in ("p1", "p2", "p3", "p4")]
             assert len(set(ids)) == 4
             group_levels = [levels_by_id[player_id] for player_id in ids]
-            assert not ({"H", "L"} <= set(group_levels))
-            assert not ("H" in group_levels and "X" in group_levels)
-            assert not (group_levels.count("H") == 1 and group_levels.count("M") == 3)
-            assert group_levels.count("H") in (0, 2)
+            if levels != ["H", "H", "M", "M", "M", "L", "L", "L"]:
+                assert not ({"H", "L"} <= set(group_levels))
+                assert not ("H" in group_levels and "X" in group_levels)
+                assert not (group_levels.count("H") == 1 and group_levels.count("M") == 3)
+                assert group_levels.count("H") in (0, 2)
             for player_id in ids:
                 counts[player_id] += 1
             if index:
                 previous_ids = [result["rounds"][index - 1][key] for key in ("p1", "p2", "p3", "p4")]
                 max_overlap = max(max_overlap, len(set(ids).intersection(previous_ids)))
+        if len(levels) >= 8:
+            assert not set(result["rounds"][0][k] for k in ("p1", "p2", "p3", "p4")).intersection(result["rounds"][1][k] for k in ("p1", "p2", "p3", "p4"))
+        for player_id in counts:
+            streak = 0
+            for round in result["rounds"]:
+                streak = streak + 1 if player_id in [round[k] for k in ("p1", "p2", "p3", "p4")] else 0
+                assert streak <= 2
         values = list(counts.values())
         context.close()
         browser.close()
@@ -232,7 +253,7 @@ def test_scheduler_freshness_for_two_high_three_middle_one_x_two_low():
         levels_by_id = {player["id"]: player["level"] for player in result["players"]}
         quartet_counts = {}
         high_partners = {1: set(), 2: set()}
-        low_partners = {7: set(), 8: set()}
+        low_co_players = {7: set(), 8: set()}
         for round in result["rounds"]:
             ids = [round[key] for key in ("p1", "p2", "p3", "p4")]
             for player_id in ids:
@@ -241,16 +262,17 @@ def test_scheduler_freshness_for_two_high_three_middle_one_x_two_low():
             quartet_counts[quartet] = quartet_counts.get(quartet, 0) + 1
             for high_id in (1, 2):
                 if high_id in ids:
-                    high_partners[high_id].update(set(ids).intersection({3, 4, 5}))
+                    team = ids[:2] if high_id in ids[:2] else ids[2:]
+                    high_partners[high_id].update(set(team).intersection({3, 4, 5}))
             for low_id in (7, 8):
                 if low_id in ids:
-                    low_partners[low_id].update(set(ids).intersection({3, 4, 5}))
+                    low_co_players[low_id].update(set(ids).intersection({3, 4, 5}))
             group_levels = [levels_by_id[player_id] for player_id in ids]
             assert group_levels.count("H") in (0, 2)
             assert not ("H" in group_levels and ("X" in group_levels or "L" in group_levels))
         assert max(counts.values()) - min(counts.values()) <= 1
         assert all(partners == {3, 4, 5} for partners in high_partners.values())
-        assert all(partners == {3, 4, 5} for partners in low_partners.values())
+        assert all(co_players == {3, 4, 5} for co_players in low_co_players.values())
         assert len(quartet_counts) >= 6
         assert max(quartet_counts.values()) <= 3
         signatures.add(tuple(tuple(round[key] for key in ("p1", "p2", "p3", "p4")) for round in result["rounds"]))
@@ -479,3 +501,35 @@ def test_scheduler_nine_player_rotation_is_stable_across_random_seeds():
     assert not offenders, offenders
     browser.close()
     playwright.stop()
+
+
+def test_failed_generation_and_extension_leave_schedule_unchanged():
+    playwright, browser, context, page = open_match()
+    try:
+        result = page.evaluate("""() => {
+            const proxy = document.querySelector('.app-shell').__vueParentComponent.proxy;
+            // Duplicate IDs are invalid for the shared scheduler and must surface
+            // as a toast without persisting blank rounds or mutating old scores.
+            proxy.players[1].id = proxy.players[0].id;
+            const failures = [];
+            for (const action of ['extend', 'emptyGenerate']) {
+                if (action === 'emptyGenerate') proxy.rounds = [];
+                const before = JSON.stringify(proxy.rounds);
+                let escapedError = null;
+                try {
+                    if (action === 'extend') proxy.extendSchedule(5);
+                    else proxy.generateSchedule();
+                } catch (error) { escapedError = error.message; }
+                failures.push({ action, escapedError, unchanged: before === JSON.stringify(proxy.rounds), toast: proxy.toast, type: proxy.toastType });
+            }
+            return failures;
+        }""")
+        for failure in result:
+            assert failure['escapedError'] is None, failure
+            assert failure['unchanged'], failure
+            assert failure['type'] == 'error', failure
+            assert 'ID' in failure['toast'], failure
+    finally:
+        context.close()
+        browser.close()
+        playwright.stop()

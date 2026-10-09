@@ -20,6 +20,9 @@ async function getByInvite(inviteCode) {
   return result.data[0]
 }
 function revisionOf(match) { return Number.isInteger(match.revision) ? match.revision : 0 }
+function validateRevision(match, event) {
+  if (event.revision !== undefined && event.revision !== revisionOf(match)) fail('数据已被其他人更新，请刷新后重试')
+}
 async function updateWithRevision(match, revision, patch) {
   const result = await matches.where({ _id: match._id, revision }).update({ data: { ...patch, revision: revision + 1, updatedAt: now() } })
   if (!result.stats || result.stats.updated !== 1) fail('数据已被其他人更新，请刷新后重试')
@@ -53,6 +56,7 @@ exports.main = async (event = {}) => {
 
   if (action === 'savePlayers') {
     requireCreator(match, openId)
+    validateRevision(match, event)
     const players = Array.isArray(event.players) ? event.players.map(player => ({
       id: player.id, name: String(player.name || '').trim(), level: player.level, status: player.status || 'active'
     })).filter(player => player.name && ['H', 'M', 'X', 'L'].includes(player.level)) : []
@@ -74,6 +78,7 @@ exports.main = async (event = {}) => {
   }
   if (action === 'generateSchedule') {
     requireCreator(match, openId)
+    validateRevision(match, event)
     const players = activePlayers(match)
     if (players.length < 4) fail('至少需要 4 名正常球员')
     const currentRounds = Array.isArray(match.rounds) ? match.rounds.map(round => ({ ...round })) : []
@@ -92,8 +97,30 @@ exports.main = async (event = {}) => {
     return { ok: true, isCreator: true, match: publicSnapshot(match, true) }
   }
 
+  if (action === 'restartMatch') {
+    requireCreator(match, openId)
+    if (event.revision === undefined) fail('重新开始比赛需要最新数据，请刷新后重试')
+    validateRevision(match, event)
+    const players = activePlayers(match)
+    if (players.length < 4) fail('至少需要 4 名正常球员')
+    // Generate everything before replacing the match, so failure preserves results.
+    const generated = buildSchedule({ players, roundCount: 15, random: Math.random })
+    if (generated.length !== 15) fail('当前人员组合无法生成完整赛程')
+    // Display sequence restarts at 1; internal IDs must never accept old scores.
+    const nextId = Math.max(0, ...(match.rounds || []).map(round => Number(round.id) || 0)) + 1
+    const rounds = generated.map((round, index) => ({
+      ...round, id: nextId + index, seq: index + 1,
+      status: index === 0 ? 'active' : 'pending', score1: null, score2: null
+    }))
+    await updateWithRevision(match, revisionOf(match), { rounds })
+    match.rounds = rounds
+    match.revision = revisionOf(match) + 1
+    return { ok: true, isCreator: true, match: publicSnapshot(match, true) }
+  }
+
   if (action === 'extendSchedule') {
     requireCreator(match, openId)
+    validateRevision(match, event)
     const players = activePlayers(match)
     if (players.length < 4) fail('至少需要 4 名正常球员')
     const rounds = Array.isArray(match.rounds) ? match.rounds.map(round => ({ ...round })) : []
@@ -101,7 +128,8 @@ exports.main = async (event = {}) => {
     const nextId = Math.max(0, ...rounds.map(round => Number(round.id) || 0)) + 1
     const nextSeq = Math.max(0, ...rounds.map(round => Number(round.seq) || 0)) + 1
     const newRounds = Array.from({ length: count }, (_, index) => ({ id: nextId + index, seq: nextSeq + index, status: 'pending', score1: null, score2: null }))
-    const previousRounds = rounds.filter(round => round.status === 'completed' || round.status === 'active')
+    // Appended rounds follow the entire fixed schedule, including pending rounds.
+    const previousRounds = rounds
     const generated = buildSchedule({ players, roundCount: count, previousRounds, random: Math.random })
     if (generated.length !== count) fail('当前人员组合无法追加合法赛程')
     newRounds.forEach((round, index) => Object.assign(round, generated[index]))
