@@ -63,3 +63,10 @@
 原生页面统一将微信 SDK 包装的业务异常转换成可操作的中文提示，不展示堆栈、函数路径、错误码和文档链接；未识别异常使用「操作未完成，请稍后重试」。人数不足、比赛已更新、权限、邀请码、排赛约束、网络与超时分别提示下一步操作。原始异常保留在开发者工具控制台，显示错误时清除旧的成功提示。
 
 此改动位于小程序前端，无需部署云函数。模拟器验证命令：`node scripts/verify-wechat-errors.cjs`，使用临时页面数据与模拟云请求，结束后恢复页面，不修改真实比赛。
+
+
+## 加赛换组与搭档变化（2026-10-10）
+
+加赛仍沿用完整现有赛程和比分，含历史的续排在满足局数、休息、连打和实力约束后，探索多个质量相近方案并规范化去重。等级冲突时先限制均衡兜底的数量，再从完整方案中随机选择，避免每次追加 5 局选回固定分组。代码位于共享排赛器，微信侧通过更新 match 云函数生效，小程序页面无需改动。
+
+审计：node scripts/audit-scheduler-extension.cjs 2；2356 个连续加赛案例通过。人员变动审计：node scripts/audit-scheduler-history.cjs；576 个案例通过。详细规则和证据见 docs/superpowers/specs/2026-10-10-scheduler-extension.md 及 docs/verification/2026-10-10-scheduler-extension-verification.md。

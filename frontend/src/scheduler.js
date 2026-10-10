@@ -126,6 +126,11 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
   const { lower, upper } = quotas
   const initialTotal = initial.counts.reduce((sum, count) => sum + count, 0)
   const preferred = groups.filter(g => g.legal)
+  // Short continuations need exploration among similarly scored candidates;
+  // sub-unit jitter cannot cross the historical partner/quartet penalties.
+  const continuation = previousRounds.length > 0
+  const teamJitter = continuation ? 8 : 0.2
+  const groupJitter = continuation ? 48 : 0.5
 
   // Necessary subset capacity bounds reject impossible strict-level quotas
   // before search, rather than silently starving players of a rare level.
@@ -153,18 +158,18 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
       }
       const opponents = split.slice(0,2).reduce((sum,a) => sum + split.slice(2).reduce((s,b) => s + state.opponents[pairIndex(a,b)], 0), 0)
       const cost = partnerCounts.reduce((sum, count) => sum + count * 4, 0) + highMiddle + opponents * 0.25
-        + (state.fixtures.get(fixtureKey(split)) || 0) * 8 + random() * 0.2
+        + (state.fixtures.get(fixtureKey(split)) || 0) * 8 + random() * teamJitter
       if (cost < best) { best = cost; chosen = split }
     }
     return { split: chosen, cost: best }
   }
 
-  function attempt(pool, bounds, nodeLimit, prioritizeRest, balanceDoubles = false) {
+  function attempt(pool, bounds, nodeLimit, prioritizeRest, balanceDoubles = false, fallbackBudget = Infinity) {
     const state = {
       ...initial,
       counts: [...initial.counts], streaks: [...initial.streaks], rests: [...initial.rests], lastRuns: [...initial.lastRuns], doubles: [...initial.doubles],
       partners: [...initial.partners], opponents: [...initial.opponents], coPlayers: [...initial.coPlayers],
-      quartets: [...initial.quartets], fixtures: new Map(initial.fixtures), rounds: []
+      quartets: [...initial.quartets], fixtures: new Map(initial.fixtures), rounds: [], fallbackCount: 0
     }
     let nodes = 0
     function visit(step) {
@@ -173,6 +178,7 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
       const remaining = roundCount - step - 1
       const scored = []
       for (const group of pool) {
+        if (state.fallbackCount + Number(!group.legal) > fallbackBudget) continue
         let overlap = 0, valid = true, pace = 0, restCost = 0, doubleCost = 0, capacity = 0, demand = 0
         for (const i of indices) {
           const playing = group.set.has(i)
@@ -202,7 +208,7 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
         const team = teamChoice(group, state)
         const cost = pace * 5 + restCost * 2 + doubleCost * 1.5 + overlap * 2
           + state.quartets[group.index] * 12 + group.pairs.reduce((sum,pair) => sum + state.coPlayers[pair], 0) * 0.25
-          + team.cost + (group.legal ? 0 : 12) + group.gap * 3 + random() * 0.5
+          + team.cost + (group.legal ? 0 : 12) + group.gap * 3 + random() * groupJitter
         scored.push({ group, split: team.split, cost, restCost })
       }
       scored.sort((a,b) => (prioritizeRest ? a.restCost - b.restCost : 0) || a.cost - b.cost)
@@ -213,11 +219,13 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
           else { if (state.streaks[i]) state.lastRuns[i] = state.streaks[i]; state.streaks[i] = 0; state.rests[i]++ }
         }
         record(state, split, group, 1)
+        state.fallbackCount += Number(!group.legal)
         state.previous = group.set
         state.rounds.push(split)
         if (visit(step + 1)) return state
         state.rounds.pop()
         record(state, split, group, -1)
+        state.fallbackCount -= Number(!group.legal)
         for (const i of group.ids) { state.counts[i]--; if (streaks[i]) state.doubles[i]-- }
         state.streaks = streaks; state.rests = rests; state.lastRuns = lastRuns; state.previous = previous
         if (nodes > nodeLimit) break
@@ -254,24 +262,54 @@ export function buildSchedule({ players, roundCount, random = Math.random, previ
   }
 
   let best, bestCost
+  const continuations = []
   // Search strict-level rotations first. Only relax levels; quotas, opening
   // rest and streak constraints remain hard, including when extending history.
   for (const pool of [preferred, groups]) {
     if (!pool.length) continue
     const bounds = capacityBounds(pool)
     if (!bounds) continue
-    const modes = n === 7 && !previousRounds.length ? [true, false] : [false]
-    for (const balanceDoubles of modes) {
-      for (let i = 0; i < 8; i++) {
-        const state = attempt(pool, bounds, 2500, !balanceDoubles && i >= 4, balanceDoubles)
-        if (!state) continue
-        const cost = quality(state)
-        if (!best || compare(cost,bestCost) < 0) { best = state; bestCost = cost }
+    // Explore continuations with a small fallback budget first, rather than
+    // letting greedy search return many avoidable mixed-level rounds and then
+    // retaining only the one deterministic low-fallback rest-first result.
+    const fallbackFloor = Math.max(1, ...indices.map(i => preferred.some(g => g.set.has(i))
+      ? 0 : Math.max(0, lower[i] - initial.counts[i])))
+    const budgets = continuation && pool === groups
+      ? [...new Set([fallbackFloor, fallbackFloor + 1, Infinity])] : [Infinity]
+    for (const fallbackBudget of budgets) {
+      const modes = n === 7 && !continuation ? [true, false] : [false]
+      for (const balanceDoubles of modes) {
+        for (let i = 0; i < 8; i++) {
+          const state = attempt(pool, bounds, 2500, !balanceDoubles && i >= (continuation ? 6 : 4), balanceDoubles, fallbackBudget)
+          if (!state) continue
+          const cost = quality(state)
+          if (continuation) continuations.push({ state, quality: cost })
+          if (!best || compare(cost,bestCost) < 0) { best = state; bestCost = cost }
+        }
+        if (best) break
       }
       if (best) break
     }
     if (best) break
   }
   if (!best) throw new Error('当前历史赛程无法同时满足局数与休息约束，请增加场次或重新生成未打赛程')
+  if (continuation) {
+    // Keep the best fallback/H-M coverage tier, then sample complete plans
+    // in a bounded quality band. Always taking the lexicographic minimum
+    // otherwise collapses the diverse search back to one continuation.
+    const score = q => q[2] * 12 + q[3] * 2 + q[4] * 2 + q[5] * 2
+      + q[6] * 4 + q[7] + q[8] * 3 + q[9] * 0.5
+    const candidates = continuations.filter(({ quality: q }) => q[0] === bestCost[0]
+      && q[1] === bestCost[1] && q[2] <= bestCost[2] + 1)
+    const minimum = Math.min(...candidates.map(({ quality: q }) => score(q)))
+    const seen = new Set()
+    const comparable = candidates.filter(({ state, quality: q }) => {
+      const key = state.rounds.map(fixtureKey).join(';')
+      if (score(q) > minimum + 12 || seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+    best = comparable[Math.min(comparable.length - 1, Math.floor(random() * comparable.length))].state
+  }
   return best.rounds.map(split => ({ p1: players[split[0]].id, p2: players[split[1]].id, p3: players[split[2]].id, p4: players[split[3]].id }))
 }

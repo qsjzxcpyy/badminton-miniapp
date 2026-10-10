@@ -200,3 +200,24 @@ test('ordinary players can reuse the invite after restart and receive a fresh sc
   assert.equal(result.match.inviteCode, undefined)
   assert.ok(result.match.ranking.every(p => p.games === 0))
 })
+
+test('cloud extendSchedule uses varied real continuations and retains saved scores', async () => {
+  for (const {levels,history} of require('../../../tests/fixtures/extension-history.cjs')) {
+    const plans=new Set()
+    for (let seed=1;seed<=12;seed++) {
+      const match=matchWithSchedule(levels)
+      match.rounds=history.map(([p1,p2,p3,p4],i)=>({p1,p2,p3,p4,id:i+1,seq:i+1,status:i<2?'completed':i===2?'active':'pending',score1:i<2?21:null,score2:i<2?18:null}))
+      const before=JSON.stringify(match.rounds)
+      const {call,stored}=harness(match,seed)
+      const result=await call({action:'extendSchedule',matchId:'local',revision:2,count:5})
+      assert.equal(result.ok,true)
+      assert.equal(stored.revision,3)
+      assert.equal(stored.rounds.length,20)
+      assert.equal(JSON.stringify(stored.rounds.slice(0,15)),before)
+      assert.ok(stored.rounds.slice(15).every((r,i)=>r.id===16+i&&r.seq===16+i&&r.status==='pending'&&r.score1===null&&r.score2===null))
+      const key=team=>team.sort((a,b)=>a-b).join(',')
+      plans.add(stored.rounds.slice(15).map(r=>[key([r.p1,r.p2]),key([r.p3,r.p4])].sort().join('|')).join(';'))
+    }
+    assert.ok(plans.size>=3,levels+': '+plans.size+' real continuations')
+  }
+})
