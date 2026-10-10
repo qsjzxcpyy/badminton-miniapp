@@ -1,0 +1,91 @@
+{
+  "recordedAt": "2026-10-10T06:44:11.656Z",
+  "appid": "wx5175a5a34861be70",
+  "env": "cloud1-d0gwahv5k7b959610",
+  "function": "match",
+  "sourceHashes": {
+    "index.js": "266f986f5f8f370c391de5100506486ecf1d29bd8342a6d85bb673979b8c8f26",
+    "logic.js": "5e97a36527daf7d6cd6f7b94837ac3d928302d27b582f53d973c78cc8e1c10a9",
+    "scheduler.cjs": "d757833bf8b3df19e53d38a6b1f9373dd28ada894bce2dcfd2f8fe19cc0aa330",
+    "package.json": "6e739f66d4599e14fc100a6ed67fb7ba9714825310ff57b4695c191a7c8bbbb3"
+  },
+  "toolResponse": {
+    "ok": true,
+    "tool": "cloud_fn_deploy",
+    "clientName": "Codex",
+    "result": {
+      "success": true,
+      "taskId": "confirmation_cloud_fn_deploy_456783b7-6189-4781-b4e0-4d9b9c7e5ed0",
+      "taskType": "confirmation_cloud_fn_deploy",
+      "status": "pending",
+      "message": "Waiting for user confirmation."
+    }
+  },
+  "pendingTask": {
+    "taskId": "confirmation_cloud_fn_deploy_456783b7-6189-4781-b4e0-4d9b9c7e5ed0",
+    "tool": "cloud_fn_deploy",
+    "appid": "wx5175a5a34861be70",
+    "env": "cloud1-d0gwahv5k7b959610",
+    "path": "C:\\Users\\Administrator.DESKTOP-OV0JDHK\\Desktop\\work\\badminton-miniapp\\cloudfunctions\\match",
+    "remoteNpmInstall": true,
+    "lastStatus": "success",
+    "pollCount": 1
+  },
+  "validation": {
+    "tests": 125,
+    "extensionCases": 2356,
+    "historyCases": 576,
+    "failures": 0
+  },
+  "realDatabaseWrites": 0,
+  "deploymentConfirmation": {
+    "ok": true,
+    "tool": "polling_task_result",
+    "clientName": "Codex",
+    "result": {
+      "success": true,
+      "taskId": "confirmation_cloud_fn_deploy_456783b7-6189-4781-b4e0-4d9b9c7e5ed0",
+      "taskType": "confirmation_cloud_fn_deploy",
+      "status": "success",
+      "createdAt": 1791614625192,
+      "updatedAt": 1791614642855,
+      "detail": "execution_success",
+      "result": {
+        "match": {
+          "filesCount": 7,
+          "packSize": "14.2 KB"
+        }
+      }
+    }
+  },
+  "completedAt": "2026-10-10T06:44:02.855Z",
+  "verifiedAt": "2026-10-10T06:48:37.293Z",
+  "liveFunctionInfo": {
+    "name": "match",
+    "status": "Active",
+    "timeout": 3,
+    "runtime": "Nodejs16.13"
+  },
+  "sourceVerification": {
+    "matchesDeploymentRequest": true,
+    "currentHashes": {
+      "index.js": "266f986f5f8f370c391de5100506486ecf1d29bd8342a6d85bb673979b8c8f26",
+      "logic.js": "5e97a36527daf7d6cd6f7b94837ac3d928302d27b582f53d973c78cc8e1c10a9",
+      "scheduler.cjs": "d757833bf8b3df19e53d38a6b1f9373dd28ada894bce2dcfd2f8fe19cc0aa330",
+      "package.json": "6e739f66d4599e14fc100a6ed67fb7ba9714825310ff57b4695c191a7c8bbbb3"
+    },
+    "remoteSourceRead": false
+  },
+  "readOnlyVerification": {
+    "verifiedAt": "2026-10-10T06:48:21.352Z",
+    "action": "getMatch",
+    "function": "match",
+    "env": "cloud1-d0gwahv5k7b959610",
+    "ok": true,
+    "requestId": "80d2dced-6291-44d6-b4b3-c88e64ec052f",
+    "revision": 16,
+    "playerCount": 8,
+    "roundCount": 20,
+    "error": null
+  }
+}

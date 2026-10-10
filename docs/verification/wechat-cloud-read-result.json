@@ -1,12 +1,12 @@
 {
-  "verifiedAt": "2026-10-09T08:18:16.985Z",
+  "verifiedAt": "2026-10-10T06:48:21.352Z",
   "action": "getMatch",
   "function": "match",
   "env": "cloud1-d0gwahv5k7b959610",
   "ok": true,
-  "requestId": "21d3f640-731c-4881-92a5-63df9da3837f",
-  "revision": 0,
-  "playerCount": 0,
-  "roundCount": 0,
+  "requestId": "80d2dced-6291-44d6-b4b3-c88e64ec052f",
+  "revision": 16,
+  "playerCount": 8,
+  "roundCount": 20,
   "error": null
 }
