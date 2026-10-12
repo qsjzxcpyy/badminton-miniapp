@@ -1,4 +1,4 @@
-page { background: #edf4ee; color: #17352c; font-family: Inter,"PingFang SC","Microsoft YaHei",sans-serif; font-size: 14px; line-height: 1.4; }
+page { background: #edf4ee; color: #17352c; font-family: "PingFang SC","Microsoft YaHei",sans-serif; font-size: 14px; line-height: 1.4; }
 view, text, button, input, picker { box-sizing: border-box; }
 button { margin: 0; padding: 0; min-width: 0; border: 0; line-height: 1.4; font-family: inherit; font-size: inherit; border-radius: 0; }
 button::after { border: 0; }

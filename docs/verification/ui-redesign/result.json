@@ -1,0 +1,43 @@
+{
+  "verifiedAt": "2026-10-10T10:20:22.152Z",
+  "cloudCallsMocked": true,
+  "realCloudWrites": false,
+  "fixtureProjectionBridge": "native setData with production decorateMatch",
+  "pageWidth": 390,
+  "nameFontSize": 15,
+  "submitFontSize": 13,
+  "nextNameFontSize": 14,
+  "scoreStepSize": {
+    "success": true,
+    "width": 32,
+    "height": 36
+  },
+  "benchRemoved": true,
+  "creatorManagementEntry": true,
+  "scheduleRowSize": {
+    "success": true,
+    "width": 356,
+    "height": 66.59375
+  },
+  "adminRemoveSize": {
+    "success": true,
+    "width": 32,
+    "height": 40
+  },
+  "participantManagementHidden": true,
+  "nativeInteractions": [
+    "entry mode",
+    "score increment",
+    "draft survives refresh",
+    "name to personal schedule",
+    "clear player filter",
+    "completed status filter",
+    "score edit validation",
+    "mocked score edit save",
+    "ranking to personal schedule",
+    "creator management tab",
+    "return from management tab",
+    "participant management hidden"
+  ],
+  "emptyAndFinishedDistinguished": true
+}

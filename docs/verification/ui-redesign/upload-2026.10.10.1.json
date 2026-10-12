@@ -1,0 +1,57 @@
+{
+  "recordedAt": "2026-10-12T01:11:37.881571+00:00",
+  "project": "C:\\Users\\Administrator.DESKTOP-OV0JDHK\\Desktop\\work\\badminton-miniapp",
+  "appId": "wx5175a5a34861be70",
+  "cloudEnv": "cloud1-d0gwahv5k7b959610",
+  "userAuthorizedUpload": true,
+  "version": "2026.10.10.1",
+  "description": "界面简洁化：删除候场区，恢复创建者管理导航，优化配色与姓名筛选",
+  "uploaded": true,
+  "experienceVersionConfirmed": false,
+  "cloudFunctionsDeployed": false,
+  "preUploadChecks": {
+    "targetedTestsPassed": 18,
+    "sourceDiffCheckPassed": true,
+    "productionFixtureMarkersAbsent": true
+  },
+  "sourceSha256": {
+    "miniprogram/app.js": "3636cd877d5fca896b22216be4459ee35d96f005799b78f860713451a99b408b",
+    "miniprogram/app.json": "a2d7e3addcfef6aae1fb3239a4158b512af77c7baf467395372ac340c2f49db3",
+    "miniprogram/app.wxss": "8e30b15d84f27deb73a2ade23447d66042987054632926d8557a5d5284f6b952",
+    "miniprogram/config.js": "e02544c079dac527aee28ac90942f4071b5ed0a143d6b85248135dbd40592419",
+    "miniprogram/pages/index/error-message.js": "b5e962bd748d533c66d9c6758e928f5f0fecffdeb3f1c800e5f7716a48bbee68",
+    "miniprogram/pages/index/index.js": "f0c0d386e335f720fac08dff746e4654f9434fd2cbb5688573bdc83241698d3a",
+    "miniprogram/pages/index/index.json": "e94d07e010e2b32fdfc75f7a8c3649af8587b7c90488812b7342bafdc49b0508",
+    "miniprogram/pages/index/index.wxml": "eaf786a229fa32a16eb3aa8eed50e2e2d8bcf3ebe3aaca232d5a76fa71d02188",
+    "miniprogram/pages/index/index.wxss": "23c1106d81779459af2998f617c7a1ec1aa1fe0b0e48d01a62719fbb0ec61ea8",
+    "miniprogram/pages/index/view-model.js": "4c0af94fd75fef633fd66583aea11c7c021ec8bf2b5d665f562f4b7f1004f6d1",
+    "miniprogram/sitemap.json": "fbe4f018f82e0e138fcdec6c07000b157704b4162bbb18b84214d4fdb2b0e11d"
+  },
+  "completedTask": {
+    "taskId": "confirmation_upload_683c4cec-fc1f-4772-85b4-c5a65e8be157",
+    "tool": "upload",
+    "taskType": "confirmation_upload",
+    "lastStatus": "success",
+    "message": "execution_success",
+    "pollCount": 1,
+    "createdAt": 1791767464267,
+    "updatedAt": 1791767475834
+  },
+  "uploadResult": {
+    "success": true,
+    "info": {
+      "size": {
+        "total": 81297,
+        "packages": [
+          {
+            "name": "TOTAL",
+            "size": 81297
+          }
+        ]
+      }
+    }
+  },
+  "completedAt": "2026-10-12T01:11:15.834000+00:00",
+  "verifiedAt": "2026-10-12T01:31:15.332394+00:00",
+  "experienceVersionStatus": "上传已成功；返回结果仅确认代码包上传。现有微信开发者工具接口未提供体验版选中状态查询或切换接口，需要在公众平台版本管理核实此版本是否已设为体验版。"
+}

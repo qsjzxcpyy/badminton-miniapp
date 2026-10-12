@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "tool": "compile_wxml",
+  "clientName": "Codex",
+  "result": {
+    "success": true,
+    "name": "$gwx",
+    "codeLength": 102954
+  }
+}

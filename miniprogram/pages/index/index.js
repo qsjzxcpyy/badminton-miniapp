@@ -3,7 +3,7 @@ const LEVELS = ['H', 'M', 'X', 'L']
 const { decorateMatch, decoratePlayers, filterRounds } = require('./view-model')
 const { friendlyErrorMessage } = require('./error-message')
 Page({
-  data: { scheduleBusy:false, scheduleAction:'', levels:['高','中','次中','低'], screen:'entry', entryMode:'join', inviteCode:'', createName:'羽毛球友谊赛', createInvite:'', error:'', notice:'', match:null, isCreator:false, currentRound:null, nextRound:null, players:[], adminPlayers:[], rounds:[], filteredRounds:[], playerCount:0, roundCount:0, filteredRoundCount:0, scheduleFilter:'all', rankingRows:[], rankingLeader:null, completedCount:0, ranking:[], score1:'', score2:'', editingRound:null, editScore1:'', editScore2:'', newPlayerName:'', newPlayerLevel:'M', newPlayerLevelIndex:1, newPlayerLevelLabel:'中', pollTimer:null },
+  data: { scoreSaving:false, selectedPlayerId:'', selectedPlayerName:'', schedulePlayers:[], restingPlayers:[], progressPercent:0, remainingCount:0, remainingMinutes:0, isFinished:false, scheduleBusy:false, scheduleAction:'', levels:['高','中','次中','低'], screen:'entry', entryMode:'join', inviteCode:'', createName:'羽毛球友谊赛', createInvite:'', error:'', notice:'', match:null, isCreator:false, currentRound:null, nextRound:null, players:[], adminPlayers:[], rounds:[], filteredRounds:[], playerCount:0, roundCount:0, filteredRoundCount:0, scheduleFilter:'all', rankingRows:[], rankingLeader:null, completedCount:0, ranking:[], score1:'', score2:'', editingRound:null, editScore1:'', editScore2:'', newPlayerName:'', newPlayerLevel:'M', newPlayerLevelIndex:1, newPlayerLevelLabel:'中', pollTimer:null },
   onLoad(options) { if (options && options.inviteCode) this.setData({ inviteCode:String(options.inviteCode) }) },
   onShow() { if (this.data.match) { this.refresh(); this.startPolling() } },
   onHide() { this.stopPolling() },
@@ -29,7 +29,9 @@ Page({
     const closedEditor = this.data.editingRound && (!this.data.match || this.data.match.id !== snapshot.id ||
       !(snapshot.rounds || []).some(round => round.id === this.data.editingRound.id))
     const view = decorateMatch(snapshot)
-    const filteredRounds = filterRounds(view.rounds, this.data.scheduleFilter)
+    const selectedPlayer = view.schedulePlayers.find(player => String(player.id) === String(this.data.selectedPlayerId))
+    const selectedPlayerId = selectedPlayer ? selectedPlayer.id : ''
+    const filteredRounds = filterRounds(view.rounds, this.data.scheduleFilter, selectedPlayerId)
     const sameRound = this.data.match && this.data.match.id === snapshot.id &&
       this.data.currentRound && view.currentRound && this.data.currentRound.id === view.currentRound.id
     if (!sameRound) this._scoreDraftFields = {}
@@ -47,6 +49,7 @@ Page({
       ranking: snapshot.ranking || [],
       filteredRounds,
       filteredRoundCount: filteredRounds.length,
+      selectedPlayerId, selectedPlayerName:selectedPlayer ? selectedPlayer.name : '',
       ...scores,
       ...(closedEditor ? { editingRound:null, editScore1:'', editScore2:'' } : {})
     })
@@ -54,8 +57,35 @@ Page({
   },
   chooseFilter(e) {
     const scheduleFilter = e.currentTarget.dataset.filter
-    const filteredRounds = filterRounds(this.data.rounds, scheduleFilter)
+    const filteredRounds = filterRounds(this.data.rounds, scheduleFilter, this.data.selectedPlayerId)
     this.setData({ scheduleFilter, filteredRounds, filteredRoundCount: filteredRounds.length })
+  },
+  choosePlayer(e) {
+    const player = this.data.schedulePlayers.find(player => String(player.id) === String(e.currentTarget.dataset.id))
+    const selectedPlayerId = player ? player.id : ''
+    const filteredRounds = filterRounds(this.data.rounds, this.data.scheduleFilter, selectedPlayerId)
+    this.setData({ selectedPlayerId, selectedPlayerName:player ? player.name : '', filteredRounds, filteredRoundCount:filteredRounds.length })
+  },
+  focusPlayer(e) {
+    this.setData({ screen:'schedule', scheduleFilter:'all' }, () => this.scrollToTop())
+    this.choosePlayer(e)
+  },
+  adjustScore(e) {
+    const { field, delta } = e.currentTarget.dataset
+    if (!this.data.currentRound || this.data.scoreSaving || !['score1', 'score2'].includes(field) || ![1, -1].includes(Number(delta))) return
+    const value = Number(this.data[field] || 0)
+    if (!Number.isInteger(value) || value < 0) return
+    this._scoreDraftFields = { ...this._scoreDraftFields, [field]:true }
+    this.setData({ [field]:String(Math.max(0, value + Number(delta))), error:'' })
+  },
+  copyInvite() {
+    if (!this.data.match || !this.data.match.inviteCode) return
+    wx.setClipboardData({ data:String(this.data.match.inviteCode), success:() => wx.showToast({title:'邀请码已复制', icon:'success'}) })
+  },
+  openRound(e) {
+    const round = this.data.rounds.find(item => String(item.id) === String(e.currentTarget.dataset.id))
+    if (round && round.status === 'active') this.switchScreen({currentTarget:{dataset:{screen:'match'}}})
+    else this.openEdit(e)
   },
   refresh() {
     if (!this.data.match || this._rosterSavePending) return Promise.resolve()
@@ -69,18 +99,26 @@ Page({
   },
   startPolling() { this.stopPolling(); this.data.pollTimer = setInterval(() => this.refresh(), 5000) },
   stopPolling() { if (this.data.pollTimer) { clearInterval(this.data.pollTimer); this.data.pollTimer = null } },
-  switchScreen(e) { this.setData({ screen:e.currentTarget.dataset.screen }); if (e.currentTarget.dataset.screen === 'admin') this.refresh() },
+  scrollToTop() { if (wx.pageScrollTo) wx.pageScrollTo({scrollTop:0, duration:0}) },
+  switchScreen(e) {
+    const screen = e.currentTarget.dataset.screen
+    if (screen === 'admin' && !this.data.isCreator) return
+    this.setData({ screen }, () => this.scrollToTop())
+    if (screen === 'admin') this.refresh()
+  },
   submitScore() { if (this.data.currentRound) return this.saveScore(this.data.currentRound.id, this.data.score1, this.data.score2) },
   saveScore(roundId, score1, score2) {
+    if (this.data.scoreSaving) return Promise.resolve(false)
     if ([score1, score2].some(value => value === null || value === undefined || String(value).trim() === '')) {
       return this.showError(new Error('请填写双方比分（0 分也请填写 0）'))
     }
     const a=Number(score1), b=Number(score2)
     if (!Number.isInteger(a) || !Number.isInteger(b) || a<0 || b<0) return this.showError(new Error('比分必须是非负整数'))
+    this.setData({scoreSaving:true, error:''})
     return this.call('saveScore', { matchId:this.data.match.id, roundId, score1:a, score2:b }).then(result => {
       if (this.applySnapshot(result.match) === false) return
       this.setData({ editingRound:null, notice:'比分已保存，排名已更新' })
-    }).catch(error => this.showError(error))
+    }).catch(error => this.showError(error)).finally(() => this.setData({scoreSaving:false}))
   },
   openEdit(e) { const round=this.data.rounds.find(item => String(item.id)===String(e.currentTarget.dataset.id)); if (round && round.status==='completed') this.setData({ editingRound:round, editScore1:String(round.score1), editScore2:String(round.score2) }) },
   closeEdit() { this.setData({ editingRound:null }) },
